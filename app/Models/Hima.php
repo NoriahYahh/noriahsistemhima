@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Hima extends Model
+{
+    protected $fillable = ['image','nama','visi','misi','alur','user_id'];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+}
