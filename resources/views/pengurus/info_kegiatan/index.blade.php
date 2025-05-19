@@ -99,7 +99,7 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-gray-100">
-                                @forelse ($info_kegiatan as $item)
+                                @forelse ($infokegiatan as $item)
                                     <tr class="border-t border-gray-200">
                                         <td class="px-6 py-4">{{ $item->nama }}</td>
                                         <td class="px-6 py-4">{{ \Carbon\Carbon::parse($item->tanggal)->format('d-m-Y') }}</td>

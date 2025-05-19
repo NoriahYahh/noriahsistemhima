@@ -115,3 +115,10 @@ class CalonPengurusController extends Controller
         return redirect()->route('calon_pengurus.index')->with('success', 'Data berhasil dihapus.');
     }
 }
+
+
+
+
+
+
+

@@ -10,8 +10,8 @@ class InfoKegiatanController extends Controller
 {
     public function index()
     {
-        $info_kegiatan = InfoKegiatan::latest()->get();
-        return view("pengurus.info_kegiatan.index", compact('info_kegiatan'));
+        $infokegiatan  = InfoKegiatan::all();
+        return view('pengurus.info_kegiatan.index', compact('infokegiatan'));
     }
 
     public function create()
@@ -76,7 +76,7 @@ class InfoKegiatanController extends Controller
             'image' => $InfoKegiatan->image,
         ]);
 
-        return redirect()->route('info-kegiatan.index')->with('success', 'Data berhasil diperbarui.');
+        return redirect()->route('info_kegiatan.index')->with('success', 'Data berhasil diperbarui.');
     }
 
     public function destroy(InfoKegiatan $infoKegiatan)
@@ -87,6 +87,6 @@ class InfoKegiatanController extends Controller
 
         $infoKegiatan->delete();
 
-        return redirect()->route('info-kegiatan.index')->with('success', 'Data berhasil dihapus.');
+        return redirect()->route('info_kegiatan.index')->with('success', 'Data berhasil dihapus.');
     }
 }
