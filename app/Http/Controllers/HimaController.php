@@ -65,9 +65,38 @@ class HimaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Hima $hima)
+   public function update(Request $request, Hima $hima)
     {
-        //
+        $request->validate([
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'nama' => 'required|string|max:250',
+            'visi' => 'required|string|max:1000',
+            'misi' => 'required|string|max:1000',
+            'alur' => 'required|string|max:1000',
+        ]);
+
+        $updateData = [
+            'nama' => $request->nama,
+            'visi' => $request->visi,
+            'misi' => $request->misi,
+            'alur' => $request->alur,
+        ];
+
+        // Jika ada upload logo baru
+        if ($request->hasFile('image')) {
+            // Hapus logo lama jika ada
+            if ($hima->image && Storage::disk('public')->exists($hima->image)) {
+                Storage::disk('public')->delete($hima->image);
+            }
+            
+            // Simpan logo baru
+            $imagePath = $request->file('image')->store('logo_hima', 'public');
+            $updateData['image'] = $imagePath;
+        }
+
+        $hima->update($updateData);
+
+        return redirect()->route('hima.index')->with('success', 'Data HIMA berhasil diperbarui');
     }
 
     /**
@@ -75,6 +104,13 @@ class HimaController extends Controller
      */
     public function destroy(Hima $hima)
     {
-        //
+        // Hapus logo jika ada
+        if ($hima->image && Storage::disk('public')->exists($hima->image)) {
+            Storage::disk('public')->delete($hima->image);
+        }
+
+        $hima->delete();
+
+        return redirect()->route('hima.index')->with('success', 'Data HIMA berhasil dihapus');
     }
 }
