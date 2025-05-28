@@ -67,10 +67,9 @@ class DataPengurusController extends Controller
      */
     public function edit(DataPengurus $dataPengurus)
     {
-        return view('pengurus.data_pengurus.edit', compact('data_pengurus'));
+
+        return view('pengurus.data_pengurus.edit', compact('dataPengurus'));
     
-        $pengurus = DataPengurus::findOrFail($id);
-        return response()->json($pengurus);
     }
 
     public function update(Request $request, DataPengurus $dataPengurus)

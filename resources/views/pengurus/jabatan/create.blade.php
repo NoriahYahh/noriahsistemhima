@@ -13,6 +13,7 @@
                 </div> --}}
 
                 <div class="container p-6 text-gray-900">
+                   
                     <h1>Tambah Jabatan</h1>
 
                     @if ($errors->any())

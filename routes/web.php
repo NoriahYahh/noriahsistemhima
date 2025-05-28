@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\CalonPengurusController;
 use App\Http\Controllers\DataAlumniController;
@@ -31,16 +32,7 @@ Route::get('/dashboard', function () {
 // Route::get('/hima-input',  () {
 //     return view('pengurus.data_functionhima.create');
 // })->middleware(['auth', 'verified'])->name('hima.create');
-Route::resource('hima', HimaController::class)->middleware(['auth', 'verified']);
-// Route::resource('beranda',BerandaController::class)->middleware(['auth', 'verified']);
-Route::resource('jabatan', JabatanController::class)->middleware(['auth', 'verified']);
-Route::resource('data_pengurus', DataPengurusController::class)->middleware(['auth', 'verified']);
-Route::resource('sk', SkController::class)->middleware(['auth', 'verified']);
-Route::resource('info_kegiatan', InfoKegiatanController::class)->middleware(['auth', 'verified']);
-Route::resource('keuangan', KeuanganController::class)->middleware(['auth', 'verified']);
-Route::resource('data_alumni', DataAlumniController::class)->middleware(['auth', 'verified']);
-Route::resource('laporan_kegiatan', LaporanKegiatanController::class)->middleware(['auth', 'verified']);
-Route::resource('calon_pengurus', CalonPengurusController::class)->middleware(['auth', 'verified']);
+
 
 
 Route::middleware('auth')->group(function () {
@@ -51,6 +43,24 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::middleware('can:crud data hima')->group(function () {
+        Route::resource('hima', HimaController::class)->middleware(['auth', 'verified']);
+        // Route::resource('beranda',BerandaController::class)->middleware(['auth', 'verified']);
+        Route::resource('jabatan', JabatanController::class)->middleware(['auth', 'verified']);
+        Route::resource('data_pengurus', DataPengurusController::class)->middleware(['auth', 'verified']);
+        Route::resource('sk', SkController::class)->middleware(['auth', 'verified']);
+        Route::resource('info_kegiatan', InfoKegiatanController::class)->middleware(['auth', 'verified']);
+        Route::resource('keuangan', KeuanganController::class)->middleware(['auth', 'verified']);
+        Route::resource('data_alumni', DataAlumniController::class)->middleware(['auth', 'verified']);
+        Route::resource('laporan_kegiatan', LaporanKegiatanController::class)->middleware(['auth', 'verified']);
+        Route::resource('calon_pengurus', CalonPengurusController::class)->middleware(['auth', 'verified']);
+    });
+    Route::middleware('can:admin melihat semua data hima')->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('adminhima.index');
+    Route::get('/admin/{hima}', [AdminController::class, 'show'])->name('adminhima.show');
+});
 });
 
 require __DIR__ . '/auth.php';
+

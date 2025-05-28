@@ -11,9 +11,11 @@
                 <div class="p-8 text-gray-900">
                     <div class="flex justify-between items-center mb-10">
                         <h1 class="text-2xl font-bold text-gray-800">Program Kerja</h1>
+                        @role('pengurus')
                         <a href="{{ route('proker.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200">
                             Tambah Program Kerja
                         </a>
+                        @endrole
                     </div>
 
                     @if (session('success'))

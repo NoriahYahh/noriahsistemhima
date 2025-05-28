@@ -39,7 +39,7 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-gray-100">
-                                @forelse ($pengurus as $p)
+                                @forelse ($dataPengurus as $p)
                                     <tr class="border-t border-gray-200">
                                         <td class="px-6 py-4 text-sm">
                                             @if ($p->image)
