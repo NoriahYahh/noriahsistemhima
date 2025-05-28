@@ -1,77 +1,66 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Data Pengurus') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                {{-- <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
-                </div> --}}
-
-                <div class="container p-6 text-gray-900">
-                    <h1>Tambah Additional for Chinese shipment</h1>
-
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-                    <form action="" method="POST">
+<form action="{{ route('data_pengurus.store') }}" method="POST" enctype="multipart/form-data"
+                        class="mb-10 space-y-6">
                         @csrf
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-700">Nama</label>
+                                <input type="text" name="nama" placeholder="Nama Lengkap"
+                                    class="shadow-sm block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 @error('nama') border-red-500 @enderror"
+                                    value="{{ old('nama') }}" required>
+                                @error('nama')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-700">NRP</label>
+                                <input type="text" name="nrp" placeholder="NRP"
+                                    class="shadow-sm block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 @error('nrp') border-red-500 @enderror"
+                                    value="{{ old('nrp') }}" required>
+                                @error('nrp')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-700">Jabatan</label>
+                                <select name="jabatan_id"
+                                    class="shadow-sm block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 @error('jabatan_id') border-red-500 @enderror"
+                                    required>
+                                    <option value="">-- Pilih Jabatan --</option>
+                                    @foreach ($jabatans as $jabatan)
+                                        <option value="{{ $jabatan->id }}"
+                                            {{ old('jabatan_id') == $jabatan->id ? 'selected' : '' }}>
+                                            {{ $jabatan->nama }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('jabatan_id')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-                        <style>
-                            .form-group {
-                                margin-bottom: 15px;
-                            }
-
-                            .form-control {
-                                width: 100%;
-                            }
-
-                            .btn {
-                                margin-top: 10px;
-                            }
-                        </style>
-
-                        <div class="form-group">
-                            <label for="vm_pct">VM, pct</label>
-                            <input type="number" name="vm_pct" class="form-control" id="vm_pct"
-                                placeholder="Masukkan VM, pct" step="any"  required>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-700">Periode</label>
+                                <input type="text" name="periode" placeholder="Contoh: 2022"
+                                    class="shadow-sm block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 @error('periode') border-red-500 @enderror"
+                                    value="{{ old('periode') }}" required>
+                                @error('periode')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block mb-2 text-sm font-medium text-gray-700">Image</label>
+                                <input type="file" name="image"
+                                    class="shadow-sm block w-full text-sm text-gray-700 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 @error('image') border-red-500 @enderror">
+                                @error('image')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="cv_cg">CV, c/g</label>
-                            <input type="number" name="cv_cg" class="form-control" id="cv_cg"
-                                placeholder="Masukkan CV, c/g" step="any" required>
+                        <div class="flex justify-end space-x-4">
+                            <button type="submit"
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition duration-200">
+                                + Tambah
+                            </button>
                         </div>
-
-                        <div class="form-group">
-                            <label for="pm">PM:</label>
-                            <input type="number" name="pm" class="form-control" id="pm"
-                                placeholder="Masukkan PM" step="any"  required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="radioactiv">Radioactive</label>
-                            <input type="number" name="radioactiv" class="form-control" id="radioactiv"
-                                placeholder="Masukkan Radioactive" step="any"
-                                required>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Simpan</button>
                     </form>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</x-app-layout>

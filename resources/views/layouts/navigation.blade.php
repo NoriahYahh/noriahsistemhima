@@ -12,8 +12,8 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                    <x-nav-link :href="route('hima.index')" :active="request()->routeIs('hima.index')">
+                        {{ __('Hima') }}
                     </x-nav-link>
                 </div>
                 
@@ -28,13 +28,8 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('sk.index')" :active="request()->routeIs('sk.index')">
-                        {{ __('SK') }}
-                    </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('hima.index')" :active="request()->routeIs('hima.index')">
-                        {{ __('Hima') }}
+                    <x-nav-link :href="route('proker.index')" :active="request()->routeIs('proker.index')">
+                        {{ __('Proker') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
@@ -47,11 +42,7 @@
                         {{ __('Keuangan') }}
                     </x-nav-link>
                 </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('proker.index')" :active="request()->routeIs('proker.index')">
-                        {{ __('Proker') }}
-                    </x-nav-link>
-                </div>
+                
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('data_alumni.index')" :active="request()->routeIs('data_alumni.index')">
                         {{ __('Data Alumni') }}
@@ -60,6 +51,11 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('laporan_kegiatan.index')" :active="request()->routeIs('laporan_kegiatan.index')">
                         {{ __('Laporan Kegiatan') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('sk.index')" :active="request()->routeIs('sk.index')">
+                        {{ __('SK') }}
                     </x-nav-link>
                 </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">

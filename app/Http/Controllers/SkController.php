@@ -18,6 +18,12 @@ class SkController extends Controller
         return view('pengurus.sk.index', compact('skList'));
     }
 
+    public function create()
+    {
+        $skList = Sk::latest()->get();
+        return view('pengurus.sk.create', compact('skList'));
+    }
+
     /**
      * Store a newly created resource in storage.
      */

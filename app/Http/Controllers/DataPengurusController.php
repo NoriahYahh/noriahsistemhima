@@ -15,8 +15,8 @@ class DataPengurusController extends Controller
     {
         // Ambil semua data pengurus
         $jabatans = Jabatan::all();
-        $pengurus = DataPengurus::all()?? new DataPengurus(); 
-        return view("pengurus.data_pengurus.index", compact('pengurus','jabatans'));
+        $pengurus = DataPengurus::all() ?? new DataPengurus();
+        return view("pengurus.data_pengurus.index", compact('pengurus', 'jabatans'));
     }
 
     /**
@@ -33,26 +33,26 @@ class DataPengurusController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'nama' => 'required|string|max:250',
             'nrp' => 'required|string|max:1000',
             'jabatan_id' => 'required|string|max:1000',
             'periode' => 'required|string|max:1000',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-         // Simpan logo ke storage
-         $imagePath = $request->file('image')->store('foto_pengurus', 'public');
+        // Simpan logo ke storage
+        $imagePath = $request->file('image')->store('foto_pengurus', 'public');
 
-         DataPengurus::create([
-             'nama' => $request->nama,
-             'nrp' => $request->nrp,
-             'jabatan_id' => $request->jabatan_id,
-             'periode' => $request->periode,
+        DataPengurus::create([
             'image' => $imagePath,
-             'user_id' => auth()->id(),
-         ]);
- 
-         return redirect()->route('data_pengurus.index');
-     }
+            'nama' => $request->nama,
+            'nrp' => $request->nrp,
+            'jabatan_id' => $request->jabatan_id,
+            'periode' => $request->periode,
+            'user_id' => auth()->id(),
+        ]);
+
+        return redirect()->route('data_pengurus.index');
+    }
 
     /**
      * Display the specified resource.
@@ -67,16 +67,52 @@ class DataPengurusController extends Controller
      */
     public function edit(DataPengurus $dataPengurus)
     {
-        //
+        return view('pengurus.data_pengurus.edit', compact('data_pengurus'));
+    
+        $pengurus = DataPengurus::findOrFail($id);
+        return response()->json($pengurus);
+    }
+
+    public function update(Request $request, DataPengurus $dataPengurus)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'nrp' => 'required|string|max:255',
+            'jabatan_id' => 'required|exists:jabatans,id',
+            'periode' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $pengurus = DataPengurus::findOrFail($id);
+
+        // Update data
+        $pengurus->nama = $request->nama;
+        $pengurus->nrp = $request->nrp;
+        $pengurus->jabatan_id = $request->jabatan_id;
+        $pengurus->periode = $request->periode;
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($pengurus->image && Storage::disk('public')->exists($pengurus->image)) {
+                Storage::disk('public')->delete($pengurus->image);
+            }
+
+            // Store new image
+            $imagePath = $request->file('image')->store('pengurus', 'public');
+            $pengurus->image = $imagePath;
+        }
+
+        $pengurus->save();
+
+        return redirect()->route('data_pengurus.index')->with('success', 'Data pengurus berhasil diupdate!');
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, DataPengurus $dataPengurus)
-    {
-        //
-    }
+    
+    
 
     /**
      * Remove the specified resource from storage.
