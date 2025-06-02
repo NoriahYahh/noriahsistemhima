@@ -57,8 +57,9 @@ Route::middleware('auth')->group(function () {
         Route::resource('calon_pengurus', CalonPengurusController::class)->middleware(['auth', 'verified']);
     });
     Route::middleware('can:admin melihat semua data hima')->group(function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('adminhima.index');
-    Route::get('/admin/{hima}', [AdminController::class, 'show'])->name('adminhima.show');
+    Route::get('/admin', [AdminController::class, 'hima'])->name('adminhima.index');
+    Route::get('/admin/{hima}', [AdminController::class, 'showhima'])->name('adminhima.show');
+     Route::resource('akun', AdminController::class)->middleware(['auth', 'verified']);
 });
 });
 

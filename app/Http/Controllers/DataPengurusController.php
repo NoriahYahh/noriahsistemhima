@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DataPengurus;
 use App\Models\Jabatan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DataPengurusController extends Controller
 {
@@ -15,7 +16,9 @@ class DataPengurusController extends Controller
     {
         // Ambil semua data pengurus
         $jabatans = Jabatan::all();
-        $pengurus = DataPengurus::all() ?? new DataPengurus();
+    //   $hima = Hima::where('user_id', Auth::id())->first() ?? new Hima();
+// 
+        $pengurus = DataPengurus::where('user_id', Auth::id())->get() ?? new DataPengurus();
         return view("pengurus.data_pengurus.index", compact('pengurus', 'jabatans'));
     }
 
@@ -24,7 +27,9 @@ class DataPengurusController extends Controller
      */
     public function create()
     {
-        return view("pengurus.data_pengurus.create");
+          $jabatans = Jabatan::all();
+        $pengurus = DataPengurus::all() ?? new DataPengurus();
+        return view("pengurus.data_pengurus.create", compact('pengurus', 'jabatans'));
     }
 
     /**

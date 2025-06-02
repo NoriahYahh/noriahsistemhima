@@ -16,6 +16,9 @@ return new class extends Migration
             $table->bigInteger('uang'); // menyimpan nominal
             $table->date('tanggal'); // menyimpan tanggal transaksi
             $table->enum('jenis', ['masuk', 'keluar']); // hanya dua pilihan
+            $table->string('keterangan');
+            $table->string('image');
+
 
  $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();

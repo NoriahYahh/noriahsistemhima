@@ -26,9 +26,9 @@ class PermissionSeeder extends Seeder
             Permission::firstOrCreate(['name' => $perm]);
         }
 
-        // Role: user
-        $userRole = Role::firstOrCreate(['name' => 'user']);
-        $userRole->givePermissionTo(['daftar kepengurusan', 'unduh']);
+        // // Role: user
+        // $userRole = Role::firstOrCreate(['name' => 'user']);
+        // $userRole->givePermissionTo(['daftar kepengurusan', 'unduh']);
 
         // Role: admin
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
@@ -45,12 +45,15 @@ class PermissionSeeder extends Seeder
 
         // Assign role ke user
         $user1 = User::find(1);
-        if ($user1) $user1->assignRole('user');
+        if ($user1) $user1->assignRole('pengurus');
 
         $user2 = User::find(2);
         if ($user2) $user2->assignRole('admin');
 
         $user3 = User::find(3);
         if ($user3) $user3->assignRole('pengurus');
+
+        $user4 = User::find(4);
+        if ($user4) $user4->assignRole('pengurus');
     }
 }

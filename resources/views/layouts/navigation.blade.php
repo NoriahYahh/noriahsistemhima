@@ -9,7 +9,7 @@
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
-
+@role('pengurus')
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('hima.index')" :active="request()->routeIs('hima.index')">
@@ -63,6 +63,22 @@
                         {{ __('Data Calon Pengurus') }}
                     </x-nav-link>
                 </div>
+                
+@endrole
+@role('admin')
+                <!-- Navigation Links -->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('adminhima.index')" :active="request()->routeIs('adminhima.index')">
+                        {{ __('All HIMA') }}
+                    </x-nav-link>
+                </div>
+                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('akun.index')" :active="request()->routeIs('akun.index')">
+                        {{ __('Akun') }}
+                    </x-nav-link>
+                </div>
+@endrole
+                
             </div>
 
             <!-- Settings Dropdown -->

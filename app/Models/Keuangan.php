@@ -16,6 +16,8 @@ class Keuangan extends Model
         'uang',
         'tanggal',
         'jenis',
+        'keterangan',
+        'image',
         'user_id',
     ];
 

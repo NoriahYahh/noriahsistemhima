@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Hima;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class HimaController extends Controller
 {
@@ -14,7 +15,7 @@ class HimaController extends Controller
     public function index()
     {
         // Ambil semua data HIMA
-        $hima = Hima::first() ?? new Hima(); 
+      $hima = Hima::where('user_id', Auth::id())->first() ?? new Hima();
         return view('pengurus.hima.index', compact('hima'));
     }
 

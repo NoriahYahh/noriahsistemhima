@@ -14,7 +14,7 @@ class ProkerController extends Controller
      */
     public function index()
     {
-        $prokers = Proker::with('jabatan', 'user')
+        $prokers = Proker::where('user_id', Auth::id())->with('jabatan', 'user')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
             

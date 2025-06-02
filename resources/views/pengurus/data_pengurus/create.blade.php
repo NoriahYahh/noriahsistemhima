@@ -1,4 +1,24 @@
-<form action="{{ route('data_pengurus.store') }}" method="POST" enctype="multipart/form-data"
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Data Pengurus') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12 bg-gray-50">
+        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg border border-gray-100">
+                <div class="p-8 text-gray-900">
+                    <h1 class="text-2xl font-bold text-center text-gray-800 mb-10">Data Pengurus</h1>
+
+                    @if (session('success'))
+                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
+                            role="alert">
+                            <span class="block sm:inline">{{ session('success') }}</span>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('data_pengurus.store') }}" method="POST" enctype="multipart/form-data"
                         class="mb-10 space-y-6">
                         @csrf
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -64,3 +84,12 @@
                             </button>
                         </div>
                     </form>
+
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+</x-app-layout>
