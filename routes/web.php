@@ -13,15 +13,18 @@ use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\LaporanKegiatanController;
 use App\Http\Controllers\ProkerController;
 use App\Http\Controllers\SkController;
+use App\Models\Hima;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $himas = Hima::all();
+    return view('welcome', compact('himas'));
 });
+Route::get('/home/{himas}', function (Hima $himas) {
+   $himas->load('user');
+    return view('detail', compact('himas'));
+})->name('home.show');
 
-Route::get('/detail', function () {
-    return view('detail');
-});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -57,11 +60,10 @@ Route::middleware('auth')->group(function () {
         Route::resource('calon_pengurus', CalonPengurusController::class)->middleware(['auth', 'verified']);
     });
     Route::middleware('can:admin melihat semua data hima')->group(function () {
-    Route::get('/admin', [AdminController::class, 'hima'])->name('adminhima.index');
-    Route::get('/admin/{hima}', [AdminController::class, 'showhima'])->name('adminhima.show');
-     Route::resource('akun', AdminController::class)->middleware(['auth', 'verified']);
-});
+        Route::get('/admin', [AdminController::class, 'hima'])->name('adminhima.index');
+        Route::get('/admin/{hima}', [AdminController::class, 'showhima'])->name('adminhima.show');
+        Route::resource('akun', AdminController::class)->middleware(['auth', 'verified']);
+    });
 });
 
 require __DIR__ . '/auth.php';
-

@@ -1,593 +1,503 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Index - iLanding Bootstrap Template</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Himpunan Mahasiswa</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /*--------------------------------------------------------------
-# Hero Section
---------------------------------------------------------------*/
-        .hero {
-            position: relative;
-            padding-top: 160px;
-            background: linear-gradient(135deg, color-mix(in srgb, var(--accent-color), transparent 95%) 50%, color-mix(in srgb, var(--accent-color), transparent 98%) 25%, transparent 50%);
+        :root {
+            --primary: #8a52e9;
+            --primary-light: #a47ff0;
+            --primary-dark: #6e35c9;
+            --secondary: #ff7cb6;
+            --text-dark: #333333;
+            --text-light: #ffffff;
+            --bg-light: #f8f5ff;
         }
 
-        .hero::before {
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+        .btn-outline-primary {
+            border-color: var(--primary);
+            color: var(--primary);
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 600;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav-link {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .hero-section {
+            background-color: #f1e9ff;
+            padding: 50px 0;
+            border-radius: 0 0 30px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: #666;
+        }
+
+        .hero-image {
+            position: relative;
+        }
+
+        .hero-image img {
+            width: 100%;
+            border-radius: 20px;
+        }
+
+        .hero-image:before {
             content: "";
             position: absolute;
-            top: 0;
-            left: 0;
+            width: 120%;
+            height: 120%;
+            background: var(--primary-light);
+            border-radius: 50%;
+            top: -40px;
+            left: -40px;
+            z-index: -1;
+        }
+
+        .section-title {
+            text-align: center;
+            margin: 50px 0 30px;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .partner-logos {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin: 30px 0;
+        }
+
+        .partner-logos img {
+            height: 30px;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .partner-logos img:hover {
+            opacity: 1;
+        }
+
+        .search-box {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin: 30px 0;
+        }
+
+        .search-input {
+            border-radius: 25px;
+            padding: 10px 20px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .organization-card {
+            background: linear-gradient(135deg, #f1e9ff 0%, #eae0ff 100%);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .organization-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .organization-logo {
+            width: 100px;
+            height: 100px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .features-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 50px 0;
+            color: white;
+            margin: 40px 0;
+            border-radius: 30px;
+        }
+
+        .feature-item {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .popular-course-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .popular-course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .course-image img {
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 90% 10%, color-mix(in srgb, var(--accent-color), transparent 92%), transparent 40%);
-            pointer-events: none;
+            object-fit: cover;
         }
 
-        .hero .hero-content {
-            position: relative;
-            z-index: 1;
+        .course-content {
+            padding: 20px;
         }
 
-        .hero .hero-content h1 {
-            font-size: 3.5rem;
+        .course-title {
             font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--text-dark);
         }
 
-        .hero .hero-content h1 .accent-text {
-            color: var(--accent-color);
-        }
-
-        @media (max-width: 992px) {
-            .hero .hero-content {
-                text-align: center;
-                margin-bottom: 3rem;
-            }
-
-            .hero .hero-content h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero .hero-content .hero-buttons {
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 575px) {
-            .hero .hero-content h1 {
-                font-size: 2rem;
-            }
-        }
-
-        .hero .company-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.5rem 1rem;
-            background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
-            border-radius: 50px;
-            color: var(--accent-color);
-            font-weight: 500;
-        }
-
-        .hero .company-badge i {
-            font-size: 1.25rem;
-        }
-
-        .hero .btn-primary {
-            background-color: var(--accent-color);
-            border-color: var(--accent-color);
-            color: var(--contrast-color);
-            padding: 0.75rem 2.5rem;
-            border-radius: 50px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .hero .btn-primary:hover {
-            background-color: color-mix(in srgb, var(--accent-color), black 20%);
-            border-color: color-mix(in srgb, var(--accent-color), black 20%);
-        }
-
-        .hero .btn-link {
-            color: var(--heading-color);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .hero .btn-link:hover {
-            color: var(--accent-color);
-        }
-
-        .hero .btn-link i {
-            font-size: 1.5rem;
-            vertical-align: middle;
-        }
-
-        .hero .hero-image {
-            position: relative;
-            text-align: center;
-            z-index: 1;
-        }
-
-        .hero .hero-image img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .hero .customers-badge {
-            position: absolute;
-            bottom: 10px;
-            right: 30px;
-            background-color: var(--surface-color);
-            padding: 1rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            max-width: 300px;
-            animation: float-badge 3s ease-in-out infinite;
-            will-change: transform;
-        }
-
-        .hero .customers-badge .customer-avatars {
+        .course-footer {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.5rem;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: 15px;
         }
 
-        .hero .customers-badge .avatar {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            border: 2px solid var(--surface-color);
-            margin-left: -8px;
+        .course-price {
+            font-weight: 700;
+            color: var(--primary);
         }
 
-        .hero .customers-badge .avatar:first-child {
-            margin-left: 0;
+        .rating {
+            color: #ffc107;
         }
 
-        .hero .customers-badge .avatar.more {
-            background-color: var(--accent-color);
-            color: var(--contrast-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .hero .customers-badge p {
-            font-size: 0.875rem;
-            color: color-mix(in srgb, var(--default-color), transparent 40%);
-        }
-
-        @media (max-width: 992px) {
-            .hero .customers-badge {
-                position: static;
-                margin: 1rem auto;
-                max-width: 250px;
-            }
-        }
-
-        .hero .stats-row {
-            position: relative;
-            z-index: 1;
-            margin-top: 5rem;
-            background-color: var(--surface-color);
-            border-radius: 20px;
+        .teacher-section {
+            padding: 50px 0;
+            background-color: white;
+            border-radius: 30px;
+            margin: 40px 0;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            padding-bottom: 2rem;
         }
 
-        .hero .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 2rem;
+        .teacher-image {
+            border-radius: 20px;
+            overflow: hidden;
         }
 
-        .hero .stat-item .stat-icon {
-            flex-shrink: 0;
-            width: 64px;
-            height: 64px;
+        .teacher-image img {
+            width: 100%;
+        }
+
+        .perks-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .perks-list li {
+            padding: 5px 0;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .perks-list li:before {
+            content: "✓";
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .testimonial-section {
+            padding: 50px 0;
+        }
+
+        .testimonial-card {
+            padding: 20px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .testimonial-header {
             display: flex;
             align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .testimonial-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+
+        .testimonial-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .testimonial-name {
+            font-weight: 700;
+            margin-bottom: 0;
+        }
+
+        .testimonial-position {
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        .testimonial-rating {
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+
+        .activity-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .activity-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .activity-image {
+            height: 200px;
+            background-color: #f1e9ff;
+            display: flex;
             justify-content: center;
-            background-color: color-mix(in srgb, var(--accent-color), transparent 92%);
-            border-radius: 50px;
-            transition: 0.3s;
+            align-items: center;
+            position: relative;
         }
 
-        .hero .stat-item .stat-icon i {
-            font-size: 1.5rem;
-            color: var(--accent-color);
+        .activity-content {
+            padding: 20px;
         }
 
-        .hero .stat-item:hover .stat-icon {
-            background-color: var(--accent-color);
+        footer {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-radius: 30px 30px 0 0;
         }
 
-        .hero .stat-item:hover .stat-icon i {
-            color: var(--contrast-color);
+        .footer-links {
+            list-style: none;
+            padding: 0;
         }
 
-        .hero .stat-item .stat-content {
-            flex-grow: 1;
+        .footer-links li {
+            margin-bottom: 10px;
         }
 
-        .hero .stat-item .stat-content h4 {
-            font-size: 1.25rem;
-            margin-bottom: 0.25rem;
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .social-links a {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            color: white;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        .badge-custom {
+            background-color: var(--secondary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.8rem;
             font-weight: 600;
         }
 
-        .hero .stat-item .stat-content p {
-            font-size: 0.875rem;
-            color: color-mix(in srgb, var(--default-color), transparent 40%);
-            margin: 0;
-        }
-
-        @media (max-width: 575px) {
-            .hero .stat-item {
-                padding: 1.5rem;
-            }
-        }
-
-        @keyframes float-badge {
-            0% {
-                transform: translateY(0);
+        @media (max-width: 768px) {
+            .hero-section {
+                text-align: center;
             }
 
-            50% {
-                transform: translateY(-10px);
-            }
-
-            100% {
-                transform: translateY(0);
-            }
-        }
-
-        /*--------------------------------------------------------------
-          # Global Header
-        --------------------------------------------------------------*/
-        .header {
-            --background-color: rgba(255, 255, 255, 0);
-            color: var(--default-color);
-            background-color: var(--background-color);
-            padding: 20px 0;
-            transition: all 0.5s;
-            z-index: 997;
-        }
-
-        .header .header-container {
-            background: var(--surface-color);
-            border-radius: 50px;
-            padding: 5px 25px;
-            box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .scrolled .header .header-container {
-            background: color-mix(in srgb, var(--surface-color), transparent 5%);
-        }
-
-        .header .logo {
-            line-height: 1;
-            padding-left: 5px;
-        }
-
-        .header .logo img {
-            max-height: 36px;
-            margin-right: 8px;
-        }
-
-        .header .logo h1 {
-            font-size: 24px;
-            margin: 0;
-            font-weight: 500;
-            color: var(--heading-color);
-        }
-
-        .header .btn-getstarted,
-        .header .btn-getstarted:focus {
-            color: var(--contrast-color);
-            background: var(--accent-color);
-            font-size: 14px;
-            padding: 8px 20px;
-            margin: 0 0 0 30px;
-            border-radius: 50px;
-            transition: 0.3s;
-        }
-
-        .header .btn-getstarted:hover,
-        .header .btn-getstarted:focus:hover {
-            color: var(--contrast-color);
-            background: color-mix(in srgb, var(--accent-color), transparent 15%);
-        }
-
-        @media (max-width: 1200px) {
-            .header {
-                padding-top: 10px;
-            }
-
-            .header .header-container {
-                margin-left: 10px;
-                margin-right: 10px;
-                padding: 10px 5px 10px 15px;
-            }
-
-            .header .logo {
-                order: 1;
-            }
-
-            .header .btn-getstarted {
-                order: 2;
-                margin: 0 10px 0 0;
-                padding: 6px 15px;
-            }
-
-            .header .navmenu {
-                order: 3;
-            }
-        }
-
-        /*--------------------------------------------------------------
-        # Navigation Menu
-        --------------------------------------------------------------*/
-        /* Navmenu - Desktop */
-        @media (min-width: 1200px) {
-            .navmenu {
-                padding: 0;
-            }
-
-            .navmenu ul {
-                margin: 0;
-                padding: 0;
-                display: flex;
-                list-style: none;
-                align-items: center;
-            }
-
-            .navmenu li {
-                position: relative;
-            }
-
-            .navmenu a,
-            .navmenu a:focus {
-                color: var(--nav-color);
-                padding: 18px 15px;
-                font-size: 16px;
-                font-family: var(--nav-font);
-                font-weight: 400;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                white-space: nowrap;
-                transition: 0.3s;
-            }
-
-            .navmenu a i,
-            .navmenu a:focus i {
-                font-size: 12px;
-                line-height: 0;
-                margin-left: 5px;
-                transition: 0.3s;
-            }
-
-            .navmenu li:last-child a {
-                padding-right: 0;
-            }
-
-            .navmenu li:hover>a,
-            .navmenu .active,
-            .navmenu .active:focus {
-                color: var(--nav-hover-color);
-            }
-
-            .navmenu .dropdown ul {
-                margin: 0;
-                padding: 10px 0;
-                background: var(--nav-dropdown-background-color);
-                display: block;
-                position: absolute;
-                visibility: hidden;
-                left: 14px;
-                top: 130%;
-                opacity: 0;
-                transition: 0.3s;
-                border-radius: 4px;
-                z-index: 99;
-                box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
-            }
-
-            .navmenu .dropdown ul li {
-                min-width: 200px;
-            }
-
-            .navmenu .dropdown ul a {
-                padding: 10px 20px;
-                font-size: 15px;
-                text-transform: none;
-                color: var(--nav-dropdown-color);
-            }
-
-            .navmenu .dropdown ul a i {
-                font-size: 12px;
-            }
-
-            .navmenu .dropdown ul a:hover,
-            .navmenu .dropdown ul .active:hover,
-            .navmenu .dropdown ul li:hover>a {
-                color: var(--nav-dropdown-hover-color);
-            }
-
-            .navmenu .dropdown:hover>ul {
-                opacity: 1;
-                top: 100%;
-                visibility: visible;
-            }
-
-            .navmenu .dropdown .dropdown ul {
-                top: 0;
-                left: -90%;
-                visibility: hidden;
-            }
-
-            .navmenu .dropdown .dropdown:hover>ul {
-                opacity: 1;
-                top: 0;
-                left: -100%;
-                visibility: visible;
-            }
-        }
-
-        /* Navmenu - Mobile */
-        @media (max-width: 1199px) {
-            .mobile-nav-toggle {
-                color: var(--nav-color);
-                font-size: 28px;
-                line-height: 0;
-                margin-right: 10px;
-                cursor: pointer;
-                transition: color 0.3s;
-            }
-
-            .navmenu {
-                padding: 0;
-                z-index: 9997;
-            }
-
-            .navmenu ul {
-                display: none;
-                list-style: none;
-                position: absolute;
-                inset: 60px 20px 20px 20px;
-                padding: 10px 0;
-                margin: 0;
-                border-radius: 6px;
-                background-color: var(--nav-mobile-background-color);
-                overflow-y: auto;
-                transition: 0.3s;
-                z-index: 9998;
-                box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
-            }
-
-            .navmenu a,
-            .navmenu a:focus {
-                color: var(--nav-dropdown-color);
-                padding: 10px 20px;
-                font-family: var(--nav-font);
-                font-size: 17px;
-                font-weight: 500;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                white-space: nowrap;
-                transition: 0.3s;
-            }
-
-            .navmenu a i,
-            .navmenu a:focus i {
-                font-size: 12px;
-                line-height: 0;
-                margin-left: 5px;
-                width: 30px;
-                height: 30px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 50%;
-                transition: 0.3s;
-                background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
-            }
-
-            .navmenu a i:hover,
-            .navmenu a:focus i:hover {
-                background-color: var(--accent-color);
-                color: var(--contrast-color);
-            }
-
-            .navmenu a:hover,
-            .navmenu .active,
-            .navmenu .active:focus {
-                color: var(--nav-dropdown-hover-color);
-            }
-
-            .navmenu .active i,
-            .navmenu .active:focus i {
-                background-color: var(--accent-color);
-                color: var(--contrast-color);
-                transform: rotate(180deg);
-            }
-
-            .navmenu .dropdown ul {
-                position: static;
-                display: none;
-                z-index: 99;
-                padding: 10px 0;
-                margin: 10px 20px;
-                background-color: var(--nav-dropdown-background-color);
-                border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
-                box-shadow: none;
-                transition: all 0.5s ease-in-out;
-            }
-
-            .navmenu .dropdown ul ul {
-                background-color: rgba(33, 37, 41, 0.1);
-            }
-
-            .navmenu .dropdown>.dropdown-active {
-                display: block;
-                background-color: rgba(33, 37, 41, 0.03);
-            }
-
-            .mobile-nav-active {
-                overflow: hidden;
-            }
-
-            .mobile-nav-active .mobile-nav-toggle {
-                color: #fff;
-                position: absolute;
-                font-size: 32px;
-                top: 15px;
-                right: 15px;
-                margin-right: 0;
-                z-index: 9999;
-            }
-
-            .mobile-nav-active .navmenu {
-                position: fixed;
-                overflow: hidden;
-                inset: 0;
-                background: rgba(33, 37, 41, 0.8);
-                transition: 0.3s;
-            }
-
-            .mobile-nav-active .navmenu>ul {
-                display: block;
+            .hero-image {
+                margin-top: 30px;
             }
         }
     </style>
 </head>
 
-<body class="index-page">
-    <x-navbar-guest />
-    <main>
-        {{ $slot }}
+<body>
+    @include('layouts.guest-navigation')
+<div>
+    {{$slot}}
+</div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="mb-4">Himpunan Mahasiswa</h5>
+                    <p>Mengembangkan potensi mahasiswa melalui berbagai kegiatan akademik dan non-akademik yang
+                        inspiratif dan bermanfaat.</p>
+                    <div class="social-links mt-3">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
 
-    </main>
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                    <h5 class="mb-4">Tautan Cepat</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Kegiatan</a></li>
+                        <li><a href="#">Organisasi</a></li>
+                        <li><a href="#">Berita</a></li>
+                    </ul>
+                </div>
 
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="mb-4">Kategori</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Seminar</a></li>
+                        <li><a href="#">Workshop</a></li>
+                        <li><a href="#">Kompetisi</a></li>
+                        <li><a href="#">Pelatihan</a></li>
+                    </ul>
+                </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-    </script>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="mb-4">Kontak Kami</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt me-2"></i> Jl. Universitas No. 123</li>
+                        <li><i class="fas fa-phone me-2"></i> (021) 1234-5678</li>
+                        <li><i class="fas fa-envelope me-2"></i> info@himapusat.ac.id</li>
+                    </ul>
+                </div>
+            </div>
 
+            <div class="text-center mt-4 pt-4 border-top border-light">
+                <p>© 2025 Himpunan Mahasiswa. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

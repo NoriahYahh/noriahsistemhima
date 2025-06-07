@@ -64,6 +64,7 @@ class KeuanganController extends Controller
             'nominal' => 'required|numeric|min:1',
             'tanggal' => 'required|date',
             'action' => 'required|in:masuk,keluar',
+            
         ]);
 
         // Create new keuangan entry
@@ -71,6 +72,8 @@ class KeuanganController extends Controller
             'uang' => $request->nominal,
             'tanggal' => $request->tanggal,
             'jenis' => $request->action,
+            'keterangan' => $request->keterangan,
+            'image' => $request->action,
             'user_id' => Auth::id(),
         ]);
 
@@ -102,6 +105,10 @@ class KeuanganController extends Controller
             'uang' => $keuangan->uang,
             'tanggal' => $keuangan->tanggal,
             'jenis' => $keuangan->jenis
+            'keterangan' => $request->keterangan,
+            'image' => $imagePath,
+
+
         ]);
     }
 
@@ -121,6 +128,9 @@ class KeuanganController extends Controller
             'nominal' => 'required|numeric|min:1',
             'tanggal' => 'required|date',
             'jenis' => 'required|in:masuk,keluar',
+            'keterangan' => 'required|string',
+            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+
         ]);
 
         // Update the keuangan entry
@@ -128,6 +138,10 @@ class KeuanganController extends Controller
             'uang' => $request->nominal,
             'tanggal' => $request->tanggal,
             'jenis' => $request->jenis,
+            'keterangan' => $request->keterangan,
+            'image' => $imagePath,
+
+
         ]);
 
         return redirect()->route('keuangan.index')
