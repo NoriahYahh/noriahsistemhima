@@ -14,11 +14,17 @@ use App\Http\Controllers\LaporanKegiatanController;
 use App\Http\Controllers\ProkerController;
 use App\Http\Controllers\SkController;
 use App\Models\Hima;
+use App\Models\InfoKegiatan;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     $himas = Hima::all();
-    return view('welcome', compact('himas'));
+    $info_kegiatans = InfoKegiatan::all();
+    return view('welcome', compact('himas','info_kegiatans'));
+});
+Route::get('/daftar', function () {
+    $himas = Hima::all();
+    return view('daftar', compact('himas'));
 });
 Route::get('/home/{himas}', function (Hima $himas) {
    $himas->load('user');

@@ -5,22 +5,21 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <div class="hero-content" style="max-width: 50%;">
-                    <h1>Develop your skills in a new and unique way</h1>
+                    <h1>Himpunan Mahasiswa di Politeknik Hasnur</h1>
                     <p>Bergabung dengan Himpunan Mahasiswa untuk mengembangkan bakat dan potensi dirimu bersama
                         komunitas yang inspiratif.</p>
                     <a href="#" class="btn btn-primary me-2">Bergabung Sekarang</a>
-                    <a href="#" class="btn btn-outline-primary">Pelajari Lebih Lanjut</a>
+                    {{-- <a href="#" class="btn btn-outline-primary">Pelajari Lebih Lanjut</a> --}}
                 </div>
                 <div class="hero-image">
-                    <img src="{{ asset('img/logo-polhas.png') }}" alt="Students" class="img-fluid"
-                        style="width: 400px;">
+                    <img src="{{ asset('img/logo-polhas.png') }}" alt="Students" class="img-fluid" style="width: 400px;">
                 </div>
             </div>
         </div>
     </section>
 
 
-    <!-- Partner Logos -->
+    {{-- <!-- Partner Logos -->
     <div class="container">
         <div class="partner-logos d-flex justify-content-between align-items-center flex-wrap">
             <div class="p-3"><img src="/api/placeholder/120/30" alt="Partner 1"></div>
@@ -29,7 +28,7 @@
             <div class="p-3"><img src="/api/placeholder/120/30" alt="Partner 4"></div>
             <div class="p-3"><img src="/api/placeholder/120/30" alt="Partner 5"></div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Student Organizations Section -->
     <div class="container">
@@ -157,58 +156,26 @@
 
         <div class="row">
             <!-- Activity 1 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="activity-card">
-                    <div class="activity-image">
-                        <img src="/api/placeholder/400/200" alt="Activity 1" class="img-fluid">
-                    </div>
-                    <div class="activity-content">
-                        <span class="badge-custom mb-2">Seminar</span>
-                        <h5>Leadership Training</h5>
-                        <p>Pelatihan kepemimpinan untuk mahasiswa baru dengan pembicara profesional</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span><i class="far fa-calendar me-1"></i> 12 Mei 2025</span>
-                            <a href="#" class="btn btn-sm btn-outline-primary">Detail</a>
+            @foreach ($info_kegiatans as $kegiatan)
+                <div class="col-md-6 col-lg-4">
+                    <div class="activity-card">
+                        <div class="activity-image">
+                            <img src="/api/placeholder/400/200" alt="Activity 1" class="img-fluid">
+                        </div>
+                        <div class="activity-content">
+                            <span class="badge-custom mb-2">{{ $kegiatan->nama }}</span>
+                            <h5>{{ $kegiatan->nama }} </h5>
+                            <p>{{ $kegiatan->keterangan }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span><i class="far fa-calendar me-1"></i> {{ $kegiatan->tanggal }} </span>
+                                <a href="#" class="btn btn-sm btn-outline-primary">Detail</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endforeach
 
-            <!-- Activity 2 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="activity-card">
-                    <div class="activity-image">
-                        <img src="/api/placeholder/400/200" alt="Activity 2" class="img-fluid">
-                    </div>
-                    <div class="activity-content">
-                        <span class="badge-custom mb-2">Workshop</span>
-                        <h5>Digital Marketing</h5>
-                        <p>Workshop strategi pemasaran digital untuk mahasiswa jurusan ekonomi</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span><i class="far fa-calendar me-1"></i> 20 Mei 2025</span>
-                            <a href="#" class="btn btn-sm btn-outline-primary">Detail</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Activity 3 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="activity-card">
-                    <div class="activity-image">
-                        <img src="/api/placeholder/400/200" alt="Activity 3" class="img-fluid">
-                    </div>
-                    <div class="activity-content">
-                        <span class="badge-custom mb-2">Kompetisi</span>
-                        <h5>Debat Ilmiah</h5>
-                        <p>Kompetisi debat ilmiah antar universitas dengan hadiah menarik</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span><i class="far fa-calendar me-1"></i> 5 Juni 2025</span>
-                            <a href="#" class="btn btn-sm btn-outline-primary">Detail</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="text-center mt-4">

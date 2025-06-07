@@ -21,7 +21,7 @@
                     </li>
                 </ul>
                 <div>
-                    <a href="#" class="btn btn-outline-primary me-2">Daftar</a>
+                    {{-- <a href="#" class="btn btn-outline-primary me-2">Daftar</a> --}}
                     <a href="#" class="btn btn-primary">Login</a>
                 </div>
             </div>
