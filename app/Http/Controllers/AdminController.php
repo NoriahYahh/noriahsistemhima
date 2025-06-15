@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataPengurus;
 use App\Models\Hima;
+use App\Models\Jabatan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-
 use Illuminate\Validation\Rules;
+use Spatie\Permission\Models\Role;
 
-use Spatie\Permission\Contracts\Role;
 
 class AdminController extends Controller
 {
@@ -29,6 +30,20 @@ class AdminController extends Controller
         
         return view('admin.show', compact('hima'));
     }
+
+    public function datapengurus(Hima $hima)
+{
+    $jabatans = Jabatan::all();
+    $hima->load('user');
+    
+    // Ambil data pengurus berdasarkan HIMA yang dipilih
+    $pengurus = DataPengurus::where('user_id', $hima->id)
+                            ->with(['jabatan', 'user']) // Load relasi jika ada
+                            ->get();
+    
+    return view("admin.data_pengurus", compact('pengurus', 'jabatans', 'hima'));
+}
+
 
      public function index()
     {
@@ -74,7 +89,7 @@ class AdminController extends Controller
         $user->assignRole($request->role);
 
 
-        return redirect()->route('users')->with('success', 'Kendaraan created successfully');
+        return redirect()->route('akun.index')->with('success', 'Kendaraan created successfully');
     }
 
     /**
@@ -120,7 +135,7 @@ class AdminController extends Controller
 
 
         // Redirect kembali ke halaman daftar pengguna dengan pesan sukses
-        return redirect()->route('users')->with('success', 'User berhasil diperbarui.');
+        return redirect()->route('akun.index')->with('success', 'User berhasil diperbarui.');
     }
 
 
@@ -134,7 +149,7 @@ class AdminController extends Controller
         $user->delete();
 
         // Redirect kembali ke halaman yang diinginkan dengan pesan sukses
-        return redirect()->route('users')->with('success', 'User berhasil dihapus.');
+        return redirect()->route('akun.index')->with('success', 'User berhasil dihapus.');
     }
 
 }

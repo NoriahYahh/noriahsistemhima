@@ -20,14 +20,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     $himas = Hima::all();
     $info_kegiatans = InfoKegiatan::all();
-    return view('welcome', compact('himas','info_kegiatans'));
+    return view('welcome', compact('himas', 'info_kegiatans'));
 });
 Route::get('/daftar', function () {
     $himas = Hima::all();
     return view('daftar', compact('himas'));
 });
 Route::get('/home/{himas}', function (Hima $himas) {
-   $himas->load('user');
+    $himas->load('user');
     return view('detail', compact('himas'));
 })->name('home.show');
 
@@ -68,7 +68,11 @@ Route::middleware('auth')->group(function () {
     Route::middleware('can:admin melihat semua data hima')->group(function () {
         Route::get('/admin', [AdminController::class, 'hima'])->name('adminhima.index');
         Route::get('/admin/{hima}', [AdminController::class, 'showhima'])->name('adminhima.show');
-        Route::resource('akun', AdminController::class)->middleware(['auth', 'verified']);
+        Route::get('/admin/{hima}/pengurus', [AdminController::class, 'datapengurus'])->name('adminhima.pengurus');
+       Route::resource('akun', AdminController::class)->parameters([
+    'akun' => 'user',
+]);
+
     });
 });
 
