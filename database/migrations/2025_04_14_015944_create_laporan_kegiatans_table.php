@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('video')->nullable();    // File video (opsional)
             $table->string('image')->nullable();    // Gambar thumbnail (opsional)
             $table->string('status');         // Status kegiatan (misal: "selesai", "berlangsung", dll)
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+
             $table->timestamps();             // created_at dan updated_at
         });
     }

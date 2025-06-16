@@ -69,6 +69,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin', [AdminController::class, 'hima'])->name('adminhima.index');
         Route::get('/admin/{hima}', [AdminController::class, 'showhima'])->name('adminhima.show');
         Route::get('/admin/{hima}/pengurus', [AdminController::class, 'datapengurus'])->name('adminhima.pengurus');
+        Route::get('/admin/{hima}/proker', [AdminController::class, 'proker'])->name('adminhima.proker');
+        Route::get('/admin/{hima}/laporan_kegiatan', [AdminController::class, 'laporan_kegiatan'])->name('adminhima.laporan_kegiatan');
        Route::resource('akun', AdminController::class)->parameters([
     'akun' => 'user',
 ]);

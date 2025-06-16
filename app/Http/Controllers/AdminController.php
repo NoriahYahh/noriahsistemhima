@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\DataPengurus;
 use App\Models\Hima;
 use App\Models\Jabatan;
+use App\Models\LaporanKegiatan;
+use App\Models\Proker;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -14,10 +16,10 @@ use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller
 {
-     public function hima()
+    public function hima()
     {
         $himas = Hima::with('user')->get();
-        
+
         return view('admin.index', compact('himas'));
     }
 
@@ -27,25 +29,47 @@ class AdminController extends Controller
     public function showhima(Hima $hima)
     {
         $hima->load('user');
-        
+
         return view('admin.show', compact('hima'));
     }
 
     public function datapengurus(Hima $hima)
-{
-    $jabatans = Jabatan::all();
-    $hima->load('user');
-    
-    // Ambil data pengurus berdasarkan HIMA yang dipilih
-    $pengurus = DataPengurus::where('user_id', $hima->id)
-                            ->with(['jabatan', 'user']) // Load relasi jika ada
-                            ->get();
-    
-    return view("admin.data_pengurus", compact('pengurus', 'jabatans', 'hima'));
-}
+    {
+        $jabatans = Jabatan::all();
+        $hima->load('user');
+
+        // Ambil data pengurus berdasarkan HIMA yang dipilih
+        $pengurus = DataPengurus::where('user_id', $hima->id)
+            ->with(['jabatan', 'user']) // Load relasi jika ada
+            ->get();
+
+        return view("admin.data_pengurus", compact('pengurus', 'jabatans', 'hima'));
+    }
+    //untuk menampilkan data prokernya
+    public function proker(Hima $hima)
+    {
+        $hima->load('user');
+
+        // Ambil data pengurus berdasarkan HIMA yang dipilih
+        $proker = Proker::where('user_id', $hima->id)
+            ->get();
+
+        return view("admin.proker", compact('proker', 'hima'));
+    }
+
+    public function laporan_kegiatan(Hima $hima)
+    {
+        $hima->load('user');
+
+        // Ambil data pengurus berdasarkan HIMA yang dipilih
+        $laporan_kegiatan = LaporanKegiatan::where('user_id', $hima->id)
+            ->get();
+
+        return view("admin.laporan_kegiatan", compact('laporan_kegiatan', 'hima'));
+    }
 
 
-     public function index()
+    public function index()
     {
 
         // return view('kendaraan.index', compact('kendaraans'));
@@ -151,5 +175,4 @@ class AdminController extends Controller
         // Redirect kembali ke halaman yang diinginkan dengan pesan sukses
         return redirect()->route('akun.index')->with('success', 'User berhasil dihapus.');
     }
-
 }

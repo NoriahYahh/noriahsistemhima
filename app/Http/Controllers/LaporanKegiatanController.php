@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\LaporanKegiatan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class LaporanKegiatanController extends Controller
 {
     public function index()
     {
-        $laporanKegiatan = LaporanKegiatan::all();
-    return view('pengurus.laporan_kegiatan.index', compact('laporanKegiatan'));
+        $laporanKegiatan = LaporanKegiatan::where('user_id', Auth::id())->paginate(10);
+        return view('pengurus.laporan_kegiatan.index', compact('laporanKegiatan'));
     }
 
     public function create()
@@ -22,7 +23,7 @@ class LaporanKegiatanController extends Controller
     public function show(LaporanKegiatan $laporanKegiatan)
     {
         //
-    }           
+    }
 
     public function store(Request $request)
     {
@@ -42,10 +43,10 @@ class LaporanKegiatanController extends Controller
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('images', 'public');
         }
-
+        $validated['user_id'] = auth()->id();
         LaporanKegiatan::create($validated);
 
-        return redirect()->route('pengurus.laporan_kegiatan.index')->with('success', 'Laporan berhasil ditambahkan.');
+        return redirect()->route('laporan_kegiatan.index')->with('success', 'Laporan berhasil ditambahkan.');
     }
 
     public function edit(LaporanKegiatan $laporanKegiatan)
@@ -77,6 +78,7 @@ class LaporanKegiatanController extends Controller
             }
             $validated['image'] = $request->file('image')->store('images', 'public');
         }
+        $validated['user_id'] = auth()->id();
 
         $laporanKegiatan->update($validated);
 
