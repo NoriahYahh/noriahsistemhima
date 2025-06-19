@@ -27,7 +27,7 @@ class DataPengurusController extends Controller
      */
     public function create()
     {
-          $jabatans = Jabatan::all();
+          $jabatans = Jabatan::where('user_id', Auth::id())->orderBy('nama')->get();
         $pengurus = DataPengurus::all() ?? new DataPengurus();
         return view("pengurus.data_pengurus.create", compact('pengurus', 'jabatans'));
     }

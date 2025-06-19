@@ -124,7 +124,7 @@
                                         </td>
                                         <td class="px-6 py-4 text-sm">{{ $p->nama }}</td>
                                         <td class="px-6 py-4 text-sm">{{ $p->nrp }}</td>
-                                        <td class="px-6 py-4 text-sm">{{ $p->jabatan_id }}</td>
+                                        <td class="px-6 py-4 text-sm">{{ $p->jabatan->nama }}</td>
                                         <td class="px-6 py-4 text-sm">{{ $p->periode }}</td>
 
                                         <td class="px-6 py-4 text-sm">

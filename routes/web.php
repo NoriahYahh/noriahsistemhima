@@ -13,8 +13,10 @@ use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\LaporanKegiatanController;
 use App\Http\Controllers\ProkerController;
 use App\Http\Controllers\SkController;
+use App\Models\DataPengurus;
 use App\Models\Hima;
 use App\Models\InfoKegiatan;
+use App\Models\Jabatan;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -26,10 +28,42 @@ Route::get('/daftar', function () {
     $himas = Hima::all();
     return view('daftar', compact('himas'));
 });
+// Route::get('/home/{himas}', function (Hima $himas) {
+//     $himas->load('user');
+//     $info_kegiatans = InfoKegiatan::all();
+//      // Ambil semua data pengurus
+//         $jabatans = Jabatan::all();
+//     // untuk mengambil data pengurus dan menaruh di sturktur organisasi jika jabatan nya ketua, wakil ketua, sekertaris,bendahara
+//         $pengurus = DataPengurus::where('user_id', )->get();
+//     return view('detail', compact('himas','info_kegiatans'));
+// })->name('home.show');
+
+// Route yang diperbaiki
 Route::get('/home/{himas}', function (Hima $himas) {
     $himas->load('user');
-    return view('detail', compact('himas'));
+    $info_kegiatans = InfoKegiatan::all();
+    
+    // Ambil semua data jabatan
+    $jabatans = Jabatan::all();
+    
+    // Ambil data pengurus berdasarkan user_id dari himas
+    // Menggunakan user_id karena Jabatan memiliki relasi ke User
+    $pengurus = DataPengurus::whereHas('jabatan', function($query) use ($himas) {
+                               $query->where('user_id', $himas->user_id);
+                           })
+                           ->with(['user', 'jabatan']) // Load relasi user dan jabatan
+                           ->get();
+    
+    // Alternatif jika ingin mengambil semua pengurus dari jabatan yang dibuat oleh user himas
+    // $pengurus = DataPengurus::with(['user', 'jabatan'])
+    //                        ->whereIn('jabatan_id', 
+    //                            Jabatan::where('user_id', $himas->user_id)->pluck('id')
+    //                        )
+    //                        ->get();
+    
+    return view('detail', compact('himas', 'info_kegiatans', 'pengurus', 'jabatans'));
 })->name('home.show');
+
 
 
 Route::get('/dashboard', function () {
@@ -71,6 +105,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/{hima}/pengurus', [AdminController::class, 'datapengurus'])->name('adminhima.pengurus');
         Route::get('/admin/{hima}/proker', [AdminController::class, 'proker'])->name('adminhima.proker');
         Route::get('/admin/{hima}/laporan_kegiatan', [AdminController::class, 'laporan_kegiatan'])->name('adminhima.laporan_kegiatan');
+      Route::patch('/admin/{hima}/laporan_kegiatan/{id}/update-status', [AdminController::class, 'updateStatus'])->name('adminhima.laporan_kegiatan.update-status');
+
        Route::resource('akun', AdminController::class)->parameters([
     'akun' => 'user',
 ]);

@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\InfoKegiatan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class InfoKegiatanController extends Controller
 {
     public function index()
     {
-        $infokegiatan  = InfoKegiatan::all();
+        $infokegiatan  = InfoKegiatan::where('user_id', Auth::id())->paginate(10);
         return view('pengurus.info_kegiatan.index', compact('infokegiatan'));
     }
 
@@ -21,24 +22,28 @@ class InfoKegiatanController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        // Validasi data input
+        $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'tanggal' => 'required|date',
             'keterangan' => 'required|string',
             'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
+        // Simpan file gambar ke storage
         $imagePath = $request->file('image')->store('info_kegiatan', 'public');
 
-        InfoKegiatan::create([
-            'nama' => $request->nama,
-            'tanggal' => $request->tanggal,
-            'keterangan' => $request->keterangan,
-            'image' => $imagePath,
-        ]);
+        // Tambahkan user_id ke data yang sudah divalidasi
+        $validated['user_id'] = auth()->id();
+        $validated['image'] = $imagePath;
 
+        // Simpan data ke database
+        InfoKegiatan::create($validated);
+
+        // Redirect kembali dengan pesan sukses
         return redirect()->route('info_kegiatan.index')->with('success', 'Data berhasil disimpan.');
     }
+
 
     public function show(InfoKegiatan $infoKegiatan)
     {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Jabatan;
 use Attribute;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JabatanController extends Controller
 {
@@ -13,11 +14,11 @@ class JabatanController extends Controller
      */
     public function index()
     {
-        $jabatans = Jabatan::all();
-        return view("pengurus.jabatan.index",compact('jabatans'));
+        $jabatans = Jabatan::where('user_id', Auth::id())->paginate(10);
+        return view("pengurus.jabatan.index", compact('jabatans'));
     }
 
-   
+
 
     /**
      * Show the form for creating a new resource.
@@ -32,15 +33,19 @@ class JabatanController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        // Validasi input
+        $validated = $request->validate([
             'nama' => 'required|string|max:250',
         ]);
 
-        Jabatan::create( [
-            'nama' => $request->nama,
-        ]);
+        // Tambahkan user_id
+        $validated['user_id'] = auth()->id();
 
-        return redirect()->route('jabatan.index');
+        // Simpan ke database
+        Jabatan::create($validated);
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('jabatan.index')->with('success', 'Jabatan berhasil ditambahkan.');
     }
 
     /**

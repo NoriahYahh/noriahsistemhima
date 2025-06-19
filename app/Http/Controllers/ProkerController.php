@@ -26,7 +26,7 @@ class ProkerController extends Controller
      */
     public function create()
     {
-        $jabatans = Jabatan::orderBy('nama')->get();
+        $jabatans = Jabatan::where('user_id', Auth::id())->orderBy('nama')->get();
         return view("pengurus.proker.create", compact('jabatans'));
     }
 

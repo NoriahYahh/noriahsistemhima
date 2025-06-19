@@ -160,7 +160,8 @@
                 <div class="col-md-6 col-lg-4">
                     <div class="activity-card">
                         <div class="activity-image">
-                            <img src="/api/placeholder/400/200" alt="Activity 1" class="img-fluid">
+                           {{-- src="/api/placeholder/400/200" --}}
+                            <img src="{{ asset('storage/' . $kegiatan->image) }}"  alt="Activity 1" class="img-fluid">
                         </div>
                         <div class="activity-content">
                             <span class="badge-custom mb-2">{{ $kegiatan->nama }}</span>

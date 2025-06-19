@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Keuangan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class KeuanganController extends Controller
 {
@@ -13,7 +14,7 @@ class KeuanganController extends Controller
      */
     public function index()
     {
-        $keuangans = Keuangan::orderBy('tanggal', 'desc')->get();
+        $keuangans = Keuangan::where('user_id', Auth::id())->orderBy('tanggal', 'desc')->get();
         
         // Calculate running balance
         $saldo = 0;
@@ -27,8 +28,7 @@ class KeuanganController extends Controller
             return $item;
         });
         
-        return view("pengurus.keuangan.index",compact('keuangansWithSaldo'));
-  
+        return view("pengurus.keuangan.index", compact('keuangansWithSaldo'));
     }
 
     /**
@@ -36,7 +36,6 @@ class KeuanganController extends Controller
      */
     public function create()
     {
-        
         $keuangans = Keuangan::orderBy('tanggal', 'desc')->get();
         
         // Calculate running balance
@@ -51,7 +50,7 @@ class KeuanganController extends Controller
             return $item;
         });
         
-        return view("pengurus.keuangan.create",compact('keuangansWithSaldo'));
+        return view("pengurus.keuangan.create", compact('keuangansWithSaldo'));
     }
 
     /**
@@ -64,8 +63,15 @@ class KeuanganController extends Controller
             'nominal' => 'required|numeric|min:1',
             'tanggal' => 'required|date',
             'action' => 'required|in:masuk,keluar',
-            
+            'keterangan' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+
+        // Handle image upload
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('keuangan', 'public');
+        }
 
         // Create new keuangan entry
         Keuangan::create([
@@ -73,7 +79,7 @@ class KeuanganController extends Controller
             'tanggal' => $request->tanggal,
             'jenis' => $request->action,
             'keterangan' => $request->keterangan,
-            'image' => $request->action,
+            'image' => $imagePath,
             'user_id' => Auth::id(),
         ]);
 
@@ -96,19 +102,18 @@ class KeuanganController extends Controller
     {
         // Check if the user owns this record
         if (Auth::id() !== $keuangan->user_id) {
-            return redirect()->route('keuangan.index')
-                ->with('error', 'Anda tidak memiliki akses untuk mengedit data ini.');
+            return response()->json(['error' => 'Unauthorized'], 403);
         }
+        
+        $imagePath = $keuangan->image ? asset('storage/' . $keuangan->image) : null;
         
         return response()->json([
             'id' => $keuangan->id,
             'uang' => $keuangan->uang,
             'tanggal' => $keuangan->tanggal,
-            'jenis' => $keuangan->jenis
-            'keterangan' => $request->keterangan,
+            'jenis' => $keuangan->jenis,
+            'keterangan' => $keuangan->keterangan,
             'image' => $imagePath,
-
-
         ]);
     }
 
@@ -128,10 +133,19 @@ class KeuanganController extends Controller
             'nominal' => 'required|numeric|min:1',
             'tanggal' => 'required|date',
             'jenis' => 'required|in:masuk,keluar',
-            'keterangan' => 'required|string',
-            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-
+            'keterangan' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+
+        // Handle image upload
+        $imagePath = $keuangan->image; // Keep existing image if no new one uploaded
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($keuangan->image) {
+                Storage::disk('public')->delete($keuangan->image);
+            }
+            $imagePath = $request->file('image')->store('keuangan', 'public');
+        }
 
         // Update the keuangan entry
         $keuangan->update([
@@ -140,8 +154,6 @@ class KeuanganController extends Controller
             'jenis' => $request->jenis,
             'keterangan' => $request->keterangan,
             'image' => $imagePath,
-
-
         ]);
 
         return redirect()->route('keuangan.index')
@@ -157,6 +169,11 @@ class KeuanganController extends Controller
         if (Auth::id() !== $keuangan->user_id) {
             return redirect()->route('keuangan.index')
                 ->with('error', 'Anda tidak memiliki akses untuk menghapus data ini.');
+        }
+        
+        // Delete image file if exists
+        if ($keuangan->image) {
+            Storage::disk('public')->delete($keuangan->image);
         }
         
         // Delete the record

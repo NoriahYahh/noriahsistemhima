@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Jabatan extends Model
 {
-    protected $fillable = ['nama'];
+    protected $fillable = ['nama',
+        'user_id',];
     
     public function datapengurus(){
         return $this->hasMany(DataPengurus::class);
@@ -14,5 +15,9 @@ class Jabatan extends Model
       public function proker()
     {
         return $this->belongsTo(Proker::class);
+    }
+      public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

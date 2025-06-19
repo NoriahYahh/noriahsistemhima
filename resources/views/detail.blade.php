@@ -1,6 +1,7 @@
+
+<!-- HTML Template yang diupdate -->
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -72,6 +73,7 @@
             font-size: 2rem;
             font-weight: bold;
             color: #666;
+            object-fit: cover;
         }
 
         .section-title {
@@ -101,25 +103,6 @@
             margin-bottom: 20px;
         }
 
-        .btn-division {
-            background-color: #e8e8e8;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            color: var(--text-dark);
-            transition: all 0.3s ease;
-            margin: 10px auto;
-            display: block;
-            width: 200px;
-        }
-
-        .btn-division:hover {
-            background-color: var(--primary);
-            color: white;
-            transform: translateY(-2px);
-        }
-
         .activities-section {
             margin: 60px 0;
         }
@@ -139,24 +122,16 @@
             transition: all 0.3s ease;
         }
 
+        .activity-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
         .activity-card:hover {
             transform: scale(1.05);
             box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-        }
-
-        .activity-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .activity-card:hover::before {
-            left: 100%;
         }
 
         .activity-title {
@@ -181,6 +156,7 @@
             height: 150px;
             border-radius: 15px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
@@ -188,6 +164,8 @@
             color: #666;
             transition: all 0.3s ease;
             cursor: pointer;
+            padding: 15px;
+            text-align: center;
         }
 
         .structure-card:hover {
@@ -195,6 +173,16 @@
             color: white;
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .structure-card .position {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .structure-card .name {
+            font-size: 0.9rem;
+            font-weight: normal;
         }
 
         .description-box {
@@ -345,9 +333,11 @@
     <!-- Hero Section -->
     <div class="container">
         <div class="hero-section">
-            <h1 class="section-title">HIMPUNAN MAHASISWA</h1>
+            <h1 class="section-title">{{$himas->nama}}</h1>
             <div class="hero-logo">
-                LOGO
+                <img src="{{ asset('storage/' . $himas->image) }}" 
+                     alt="{{ $himas->nama }}" 
+                     class="hero-logo">
             </div>
         </div>
     </div>
@@ -358,72 +348,129 @@
             <div class="row">
                 <div class="col-md-6">
                     <h3>VISI</h3>
-                    <p>Menjadi wadah pengembangan mahasiswa yang unggul dalam bidang akademik dan non-akademik, berkarakter kuat, serta mampu berkontribusi positif bagi kemajuan institusi dan masyarakat. Kami berkomitmen untuk menciptakan generasi pemimpin masa depan yang inovatif, beretos kerja tinggi, dan memiliki integritas yang tinggi dalam setiap aspek kehidupan.</p>
+                    <p>{{$himas->visi}}</p>
                 </div>
                 <div class="col-md-6">
                     <h3>MISI</h3>
-                    <p>Menyelenggarakan program-program pengembangan diri yang komprehensif meliputi pelatihan kepemimpinan, workshop keterampilan, dan kegiatan pengabdian masyarakat. Memfasilitasi mahasiswa dalam mengembangkan potensi akademik melalui diskusi ilmiah, penelitian kolaboratif, dan seminar dengan narasumber ahli. Membangun jaringan yang kuat antara mahasiswa, alumni, dan profesional di berbagai bidang untuk menciptakan ekosistem pembelajaran yang berkelanjutan.</p>
+                    <p>{{$himas->misi}}</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Division Button -->
-    <div class="container text-center">
-        <button class="btn-division" onclick="showDivisions()">
-            Penjelasan Jabatan/Divisi
-        </button>
-    </div>
-
     <!-- Activities Section -->
-    <div class="container activities-section">
+    <div class=" activities-section">
         <h2 class="section-title">KEGIATAN HIMA</h2>
         <div class="row">
+            @foreach ($info_kegiatans as $kegiatan)
             <div class="col-md-4">
-                <div class="activity-card" onclick="showActivityDetail('kegiatan1')">
-                    ×
+                <div class="activity-card" onclick="showActivityDetail('{{$kegiatan->id}}')">
+                    <img src="{{ asset('storage/' . $kegiatan->image) }}" 
+                         alt="{{ $kegiatan->nama }}">
                 </div>
-                <div class="activity-title">Workshop & Seminar</div>
+                <div class="activity-title">{{$kegiatan->nama}}</div>
             </div>
-            <div class="col-md-4">
-                <div class="activity-card" onclick="showActivityDetail('kegiatan2')">
-                    ×
-                </div>
-                <div class="activity-title">Kompetisi & Lomba</div>
-            </div>
-            <div class="col-md-4">
-                <div class="activity-card" onclick="showActivityDetail('kegiatan3')">
-                    ×
-                </div>
-                <div class="activity-title">Pengabdian Masyarakat</div>
-            </div>
+            @endforeach
         </div>
     </div>
 
     <!-- Structure Organization Section -->
-    <div class="container structure-section">
+    {{-- <div class="container structure-section">
         <h2 class="section-title">STRUKTUR ORGANISASI</h2>
         <div class="structure-grid">
-            <div class="structure-card" onclick="showStructureDetail('ketua')">
-                Ketua Umum
-            </div>
-            <div class="structure-card" onclick="showStructureDetail('wakil')">
-                Wakil Ketua
-            </div>
-            <div class="structure-card" onclick="showStructureDetail('sekretaris')">
-                Sekretaris
-            </div>
-            <div class="structure-card" onclick="showStructureDetail('bendahara')">
-                Bendahara
-            </div>
+            @foreach ($pengurus as $person)
+                @if (in_array(strtolower($person->jabatan->nama), ['ketua umum', 'ketua', 'wakil ketua','wakil','wakil ketua umum', 'sekretaris','sekertaris', 'bendahara']))
+                <div class="structure-card" onclick="showStructureDetail('{{$person->id}}')">
+                    <div class="position">{{$person->jabatan->nama}}</div>
+                    <div class="name">{{ $person->user ? $person->user->name : $person->nama }}</div>
+                </div>
+                @endif
+            @endforeach
+            
+               @foreach ($pengurus as $person)
+                @php
+                    $jabatan_lower = strtolower($person->jabatan->nama);
+                    $show_position = str_contains($jabatan_lower, 'ketua') || 
+                                   str_contains($jabatan_lower, 'wakil') || 
+                                   str_contains($jabatan_lower, 'sekretaris') || 
+                                   str_contains($jabatan_lower, 'sekertaris') || 
+                                   str_contains($jabatan_lower, 'bendahara');
+                @endphp
+                @if ($show_position)
+                <div class="structure-card" onclick="showStructureDetail('{{$person->id}}')">
+                    <div class="position">{{$person->jabatan->nama}}</div>
+                    <div class="name">{{ $person->user ? $person->user->name : $person->nama }}</div>
+                </div>
+                @endif
+            @endforeach
         </div>
         <div class="description-box">
-            <p id="structure-description">Deskripsi dari data pengurus seperti nama, dan jabatannya</p>
+            <p id="structure-description">Pilih salah satu pengurus untuk melihat detail informasi</p>
+        </div>
+    </div> --}}
+    
+<!-- Structure Organization Section - Updated -->
+<div class=" structure-section">
+    <h2 class="section-title">STRUKTUR ORGANISASI</h2>
+    
+    <!-- Wrapper untuk menengahkan grid -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+            <div class="structure-grid">
+                @php
+                    // Definisikan urutan prioritas jabatan
+                    $jabatan_priority = [
+                        'ketua' => 1,
+                        'wakil' => 2,
+                        'bendahara' => 3,
+                        'sekretaris' => 4,
+                        'sekertaris' => 4, // untuk menangani typo
+                    ];
+                    
+                    // Filter dan urutkan pengurus
+                    $filtered_pengurus = $pengurus->filter(function($person) {
+                        $jabatan_lower = strtolower($person->jabatan->nama);
+                        return str_contains($jabatan_lower, 'ketua') || 
+                               str_contains($jabatan_lower, 'wakil') || 
+                               str_contains($jabatan_lower, 'sekretaris') || 
+                               str_contains($jabatan_lower, 'sekertaris') || 
+                               str_contains($jabatan_lower, 'bendahara');
+                    })->sortBy(function($person) use ($jabatan_priority) {
+                        $jabatan_lower = strtolower($person->jabatan->nama);
+                        
+                        // Cari prioritas berdasarkan kata kunci dalam nama jabatan
+                        foreach ($jabatan_priority as $keyword => $priority) {
+                            if (str_contains($jabatan_lower, $keyword)) {
+                                return $priority;
+                            }
+                        }
+                        
+                        // Jika tidak ditemukan, beri prioritas terakhir
+                        return 99;
+                    });
+                @endphp
+                
+                @foreach ($filtered_pengurus as $person)
+                <div class="structure-card" onclick="showStructureDetail('{{$person->id}}')">
+                    <div class="position">{{$person->jabatan->nama}}</div>
+                    <div class="name">{{ $person->user ? $person->user->name : $person->nama }}</div>
+                </div>
+                @endforeach
+            </div>
         </div>
     </div>
-
+    
+    <!-- Description box juga di tengah -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-6">
+            <div class="description-box">
+                <p id="structure-description">Pilih salah satu pengurus untuk melihat detail informasi</p>
+            </div>
+        </div>
+    </div>
+</div>
     <!-- Announcement Section -->
-    <div class="container announcement-section">
+    <div class=" announcement-section">
         <h2 class="section-title">PENGUMUMAN</h2>
         <div class="btn-group-custom">
             <a class="btn-announcement active" href="/daftar">Pendaftaran</a>
@@ -433,7 +480,7 @@
     </div>
 
     <!-- Registration Flow Section -->
-    <div class="container">
+    <div class="">
         <h2 class="section-title">ALUR PENDAFTARAN</h2>
         <div class="registration-flow">
             <div class="flow-steps">
@@ -456,9 +503,9 @@
                     <p>Ujian tertulis sesuai bidang minat</p>
                 </div>
             </div>
-            <button class="btn-register" onclick="registerNow()">
+            <a class="btn-register" href="/daftar">
                 Pendaftaran
-            </button>
+            </a>
         </div>
     </div>
 
@@ -466,29 +513,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Data struktur organisasi
-        const structureData = {
-            ketua: {
-                name: "Ahmad Rizky Pratama",
-                position: "Ketua Umum",
-                description: "Memimpin organisasi dan bertanggung jawab atas seluruh kegiatan himpunan. Mengkoordinasikan semua divisi dan mengambil keputusan strategis untuk kemajuan organisasi."
-            },
-            wakil: {
-                name: "Siti Nurhaliza",
-                position: "Wakil Ketua",
-                description: "Membantu ketua dalam menjalankan tugas-tugas organisasi dan menggantikan ketua saat berhalangan. Mengawasi pelaksanaan program kerja dan koordinasi antar divisi."
-            },
-            sekretaris: {
-                name: "Budi Santoso",
-                position: "Sekretaris",
-                description: "Mengelola administrasi organisasi, dokumentasi rapat, dan korespondensi. Bertanggung jawab atas arsip dan database anggota serta menyiapkan laporan kegiatan."
-            },
-            bendahara: {
-                name: "Maya Sari",
-                position: "Bendahara",
-                description: "Mengelola keuangan organisasi, membuat laporan keuangan, dan mengatur anggaran untuk setiap kegiatan. Memastikan transparansi dalam pengelolaan dana."
-            }
-        };
+        // Data pengurus dari server (Laravel Blade to JavaScript)
+        const pengurusData = {!! json_encode($pengurus->keyBy('id')->map(function($person) {
+            return [
+                'id' => $person->id,
+                'nama' => $person->nama,
+                'nrp' => $person->nrp,
+                'user_name' => $person->user ? $person->user->name : $person->nama,
+                'position' => $person->jabatan->nama,
+                'periode' => $person->periode,
+                'image' => $person->image,
+                'email' => $person->user ? $person->user->email : '',
+            ];
+        })) !!};
 
         // Data pengumuman
         const announcementData = {
@@ -500,61 +537,47 @@
         // Fungsi navigasi
         function navigateTo(page) {
             alert(`Navigasi ke halaman: ${page}`);
-            // Di implementasi nyata, ini akan mengarahkan ke halaman yang sesuai
         }
 
         // Fungsi untuk menampilkan detail struktur
-        function showStructureDetail(position) {
-            const data = structureData[position];
-            const descriptionElement = document.getElementById('structure-description');
-            descriptionElement.innerHTML = `
-                <h5>${data.name}</h5>
-                <h6 class="text-primary">${data.position}</h6>
-                <p>${data.description}</p>
-            `;
+        function showStructureDetail(pengurusId) {
+            const data = pengurusData[pengurusId];
+            if (data) {
+                const descriptionElement = document.getElementById('structure-description');
+                descriptionElement.innerHTML = `
+                    <h5>${data.user_name}</h5>
+                    <h6 class="text-primary">${data.position}</h6>
+                    <p><strong>NRP:</strong> ${data.nrp}</p>
+                    <p><strong>Periode:</strong> ${data.periode}</p>
+                    ${data.email ? `<p><strong>Email:</strong> ${data.email}</p>` : ''}
+                    ${data.image ? `<div class="mt-3"><img src="/storage/${data.image}" alt="${data.user_name}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;"></div>` : ''}
+                `;
+            }
         }
 
         // Fungsi untuk menampilkan pengumuman
         function showAnnouncement(type) {
-            // Update active button
             document.querySelectorAll('.btn-announcement').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
 
-            // Show announcement (in real implementation, this would show the content)
             alert(`Pengumuman ${type}: ${announcementData[type]}`);
         }
 
-        // Fungsi untuk menampilkan divisi
-        function showDivisions() {
-            alert("Menampilkan penjelasan jabatan dan divisi dalam organisasi:\n\n1. Ketua Umum - Memimpin organisasi\n2. Wakil Ketua - Membantu ketua\n3. Sekretaris - Mengelola administrasi\n4. Bendahara - Mengelola keuangan\n5. Divisi Acara - Mengelola event\n6. Divisi Humas - Public relations\n7. Divisi Media - Dokumentasi dan publikasi");
-        }
-
         // Fungsi untuk menampilkan detail kegiatan
-        function showActivityDetail(kegiatan) {
-            const activities = {
-                kegiatan1: "Workshop & Seminar: Kegiatan pengembangan skill melalui pelatihan dan seminar dengan narasumber ahli",
-                kegiatan2: "Kompetisi & Lomba: Event kompetisi untuk mengasah kemampuan dan prestasi mahasiswa",
-                kegiatan3: "Pengabdian Masyarakat: Program sosial untuk berkontribusi kepada masyarakat"
-            };
-            alert(activities[kegiatan]);
-        }
-
-        // Fungsi pendaftaran
-        function registerNow() {
-            if (confirm("Apakah Anda yakin ingin mendaftar sebagai anggota?")) {
-                alert("Terima kasih! Anda akan diarahkan ke formulir pendaftaran.");
-                // Di implementasi nyata, ini akan mengarahkan ke halaman pendaftaran
-            }
+        function showActivityDetail(kegiatanId) {
+            alert(`Detail kegiatan dengan ID: ${kegiatanId}`);
         }
 
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
-            // Set default structure description
-            showStructureDetail('ketua');
+            // Set default structure description jika ada data pengurus
+            const firstPengurus = Object.keys(pengurusData)[0];
+            if (firstPengurus) {
+                showStructureDetail(firstPengurus);
+            }
         });
     </script>
 </body>
-
 </html>

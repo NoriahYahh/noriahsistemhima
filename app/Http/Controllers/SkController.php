@@ -14,7 +14,7 @@ class SkController extends Controller
      */
     public function index()
     {
-        $skList = Sk::latest()->get();
+        $skList = Sk::where('user_id', Auth::id())->latest()->paginate(10);
         return view('pengurus.sk.index', compact('skList'));
     }
 

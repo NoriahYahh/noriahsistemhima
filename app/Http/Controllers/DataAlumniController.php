@@ -6,6 +6,8 @@ use App\Models\DataAlumni;
 use App\Models\DataPengurus;
 use App\Models\Jabatan;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -35,8 +37,9 @@ class DataAlumniController extends Controller
         $twoYearsAgo = Carbon::now()->subYears(2);
         $jabatans = Jabatan::all();
         // Ambil data pengurus yang tanggal periodenya lebih dari 2 tahun yang lalu
-        $dataPengurus = DataPengurus::where('periode', '<=', $twoYearsAgo)->get();
-
+     $dataPengurus = DataPengurus::where('periode', '<=', $twoYearsAgo)
+    ->where('user_id', Auth::id())
+    ->get();
         return view('pengurus.data_alumni.index', compact('dataPengurus','jabatans'));
     }
     /**

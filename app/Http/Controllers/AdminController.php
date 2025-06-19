@@ -68,6 +68,30 @@ class AdminController extends Controller
         return view("admin.laporan_kegiatan", compact('laporan_kegiatan', 'hima'));
     }
 
+    public function updateStatus(Request $request, $id)
+{
+    try {
+        // Validasi input
+        $request->validate([
+            'status' => 'required|in:Terverifikasi,Menunggu Verifikasi,Ditolak'
+        ]);
+
+        // Cari laporan kegiatan berdasarkan ID
+        $laporanKegiatan = LaporanKegiatan::findOrFail($id);
+        
+        // Update status
+        $laporanKegiatan->status = $request->status;
+        $laporanKegiatan->save();
+
+        // Redirect kembali dengan pesan sukses
+        return redirect()->back()->with('success', 'Status laporan kegiatan berhasil diperbarui!');
+        
+    } catch (\Exception $e) {
+        // Jika terjadi error
+        return redirect()->back()->with('error', 'Gagal memperbarui status laporan kegiatan: ' . $e->getMessage());
+    }
+}
+
 
     public function index()
     {
