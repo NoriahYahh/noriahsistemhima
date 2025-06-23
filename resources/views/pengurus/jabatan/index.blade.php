@@ -10,21 +10,29 @@
             <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg border border-gray-100">
                 <div class="p-8 text-gray-900">
                     <h1 class="text-2xl font-bold text-center text-gray-800 mb-10">Jabatan</h1>
+                    
+                    <!-- Alert Success -->
+                    @if(session('success'))
+                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6" role="alert">
+                            <span class="block sm:inline">{{ session('success') }}</span>
+                        </div>
+                    @endif
+
                     @role('pengurus')
                         <form action="{{ route('jabatan.store') }}" method="POST" class="mb-10">
                             @csrf
                             <div class="flex items-center space-x-4 mb-6">
                                 <input type="text" name="nama" id="name" placeholder="Nama Jabatan"
-                                    class="shadow-sm flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+                                    class="shadow-sm flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 @error('nama') border-red-500 @enderror"
+                                    value="{{ old('nama') }}" required>
                                 <button type="submit"
                                     class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md transition duration-200">
                                     + Tambah
                                 </button>
-                                <button type="button"
-                                    class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md transition duration-200">
-                                    Update
-                                </button>
                             </div>
+                            @error('nama')
+                                <p class="text-red-500 text-sm mb-4">{{ $message }}</p>
+                            @enderror
                         </form>
                     @endrole
 
@@ -32,39 +40,273 @@
                         <table class="w-full table-auto">
                             <thead class="bg-gray-400 text-gray-700">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">No
-                                    </th>
-                                    <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Nama
-                                        Jabatan</th>
+                                    <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">No</th>
+                                    <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Nama Jabatan</th>
                                     @role('pengurus')
-                                        <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">
-                                            Action</th>
+                                        <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Action</th>
                                     @endrole
                                 </tr>
                             </thead>
                             <tbody class="bg-gray-100">
-                                @foreach ($jabatans as $jabatan)
-                                    <tr class="border-t border-gray-200">
-                                        <td class="px-6 py-4 text-sm">1</td>
-                                        <td class="px-6 py-4 text-sm">{{ $jabatan->nama }}</td>
+                                @forelse ($jabatans as $index => $jabatan)
+                                    <tr class="border-t border-gray-200" id="jabatan-row-{{ $jabatan->id }}">
+                                        <td class="px-6 py-4 text-sm">{{ $jabatans->firstItem() + $index }}</td>
+                                        <td class="px-6 py-4 text-sm" id="jabatan-nama-{{ $jabatan->id }}">{{ $jabatan->nama }}</td>
                                         @role('pengurus')
                                             <td class="px-6 py-4 text-sm flex space-x-4">
-                                                <a href="#"
-                                                    class="text-blue-600 hover:text-blue-800 font-medium">Edit</a>
-                                                <a href="#"
-                                                    class="text-red-600 hover:text-red-800 font-medium">Delete</a>
+                                                <button onclick="editJabatan({{ $jabatan->id }})"
+                                                    class="text-blue-600 hover:text-blue-800 font-medium">Edit</button>
+                                                <button onclick="deleteJabatan({{ $jabatan->id }})"
+                                                    class="text-red-600 hover:text-red-800 font-medium">Delete</button>
                                             </td>
                                         @endrole
                                     </tr>
-                                @endforeach
-
-                                <!-- Data jabatan lainnya bisa ditambahkan di sini -->
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="px-6 py-4 text-center text-gray-500">
+                                            Belum ada data jabatan
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
 
+                    <!-- Pagination -->
+                    @if($jabatans->hasPages())
+                        <div class="mt-6">
+                            {{ $jabatans->links() }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal Edit Jabatan -->
+    <div id="editModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">Edit Jabatan</h3>
+                    <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <form id="editForm">
+                    @csrf
+                    @method('PUT')
+                    <div class="mb-4">
+                        <label for="edit_nama" class="block text-sm font-medium text-gray-700 mb-2">Nama Jabatan</label>
+                        <input type="text" id="edit_nama" name="nama" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            required>
+                        <div id="edit_nama_error" class="text-red-500 text-sm mt-1 hidden"></div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="closeEditModal()" 
+                            class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition duration-200">
+                            Batal
+                        </button>
+                        <button type="submit" 
+                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200">
+                            Update
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Delete Confirmation -->
+    <div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                    <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L5.268 15.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Hapus Jabatan</h3>
+                <p class="text-sm text-gray-500 mb-4">Apakah Anda yakin ingin menghapus jabatan ini? Tindakan ini tidak can dibatalkan.</p>
+                
+                <div class="flex justify-center space-x-3">
+                    <button type="button" onclick="closeDeleteModal()" 
+                        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition duration-200">
+                        Batal
+                    </button>
+                    <button type="button" onclick="confirmDelete()" 
+                        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-200">
+                        Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentJabatanId = null;
+
+        // Function to show success message
+        function showSuccessMessage(message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6';
+            alertDiv.setAttribute('role', 'alert');
+            alertDiv.innerHTML = `<span class="block sm:inline">${message}</span>`;
+            
+            const container = document.querySelector('.p-8');
+            const firstChild = container.children[1]; // Insert after h1
+            container.insertBefore(alertDiv, firstChild);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000);
+        }
+
+        // Function to show error message
+        function showErrorMessage(message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6';
+            alertDiv.setAttribute('role', 'alert');
+            alertDiv.innerHTML = `<span class="block sm:inline">${message}</span>`;
+            
+            const container = document.querySelector('.p-8');
+            const firstChild = container.children[1];
+            container.insertBefore(alertDiv, firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000);
+        }
+
+        // Edit Jabatan Functions
+        function editJabatan(id) {
+            currentJabatanId = id;
+            
+            // Fetch jabatan data
+            fetch(`/jabatan/${id}/edit`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('edit_nama').value = data.nama;
+                document.getElementById('editModal').classList.remove('hidden');
+                document.getElementById('edit_nama').focus();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showErrorMessage('Terjadi kesalahan saat mengambil data jabatan.');
+            });
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+            document.getElementById('edit_nama_error').classList.add('hidden');
+            document.getElementById('editForm').reset();
+            currentJabatanId = null;
+        }
+
+        // Handle edit form submission
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('nama', document.getElementById('edit_nama').value);
+            formData.append('_method', 'PUT');
+            formData.append('_token', document.querySelector('input[name="_token"]').value);
+            
+            fetch(`/jabatan/${currentJabatanId}`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the table row
+                    document.getElementById(`jabatan-nama-${currentJabatanId}`).textContent = data.data.nama;
+                    closeEditModal();
+                    showSuccessMessage(data.message);
+                } else {
+                    // Show validation errors
+                    if (data.errors && data.errors.nama) {
+                        document.getElementById('edit_nama_error').textContent = data.errors.nama[0];
+                        document.getElementById('edit_nama_error').classList.remove('hidden');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showErrorMessage('Terjadi kesalahan saat mengupdate jabatan.');
+            });
+        });
+
+        // Delete Jabatan Functions
+        function deleteJabatan(id) {
+            currentJabatanId = id;
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+            currentJabatanId = null;
+        }
+
+        function confirmDelete() {
+            fetch(`/jabatan/${currentJabatanId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove the table row
+                    document.getElementById(`jabatan-row-${currentJabatanId}`).remove();
+                    closeDeleteModal();
+                    showSuccessMessage(data.message);
+                } else {
+                    showErrorMessage('Terjadi kesalahan saat menghapus jabatan.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showErrorMessage('Terjadi kesalahan saat menghapus jabatan.');
+            });
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditModal();
+            }
+        });
+
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeEditModal();
+                closeDeleteModal();
+            }
+        });
+    </script>
 </x-app-layout>

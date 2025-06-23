@@ -503,7 +503,7 @@
                     <p>Ujian tertulis sesuai bidang minat</p>
                 </div>
             </div>
-            <a class="btn-register" href="/daftar">
+            <a class="btn-register" href="{{route('daftar.create',$himas->id)}}">
                 Pendaftaran
             </a>
         </div>

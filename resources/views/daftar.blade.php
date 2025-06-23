@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Tambah Calon Pengurus - Himpunan Mahasiswa</title>
+    <title>Form Tambah Calon Pengurus - {{ $hima->nama }}</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -126,6 +126,18 @@
             background-color: white;
         }
 
+        .form-control.is-invalid {
+            border-color: var(--danger);
+            background-color: #fff5f5;
+        }
+
+        .invalid-feedback {
+            display: block;
+            color: var(--danger);
+            font-size: 0.875rem;
+            margin-top: 5px;
+        }
+
         .gender-select {
             position: relative;
         }
@@ -188,42 +200,39 @@
             margin-left: 3px;
         }
 
-        .error-alert {
-            background: linear-gradient(135deg, #fee, #fdd);
-            border: 1px solid #f5c6cb;
+        .alert {
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 30px;
             position: relative;
         }
 
-        .error-alert::before {
-            content: '\f071';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            color: var(--danger);
-            font-size: 1.2rem;
-            margin-right: 10px;
+        .alert-danger {
+            background: linear-gradient(135deg, #fee, #fdd);
+            border: 1px solid #f5c6cb;
         }
 
-        .error-list {
+        .alert-success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
-        .error-list li {
-            color: var(--danger);
+        .alert li {
             padding: 5px 0;
             position: relative;
             padding-left: 20px;
         }
 
-        .error-list li::before {
+        .alert li::before {
             content: '•';
             position: absolute;
             left: 0;
-            color: var(--danger);
             font-weight: bold;
         }
 
@@ -422,7 +431,7 @@
         <div class="container">
             <a class="navbar-brand" href="#">
                 <i class="fas fa-graduation-cap me-2"></i>
-                Himpunan Mahasiswa
+                {{ $hima->nama ?? 'Himpunan Mahasiswa' }}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -454,8 +463,8 @@
 
             <!-- Form Header -->
             <div class="form-header">
-                <h1><i class="fas fa-user-plus me-3"></i>Form Tambah Calon Pengurus</h1>
-                <p class="subtitle">Lengkapi data diri Anda untuk mendaftar sebagai calon pengurus</p>
+                <h1><i class="fas fa-user-plus me-3"></i>Form Pendaftaran Calon Pengurus</h1>
+                <p class="subtitle">Lengkapi data diri Anda untuk mendaftar sebagai calon pengurus {{ $hima->nama ?? 'Himpunan Mahasiswa' }}</p>
             </div>
 
             <!-- Progress Indicator -->
@@ -466,18 +475,30 @@
                 <div class="step-item"></div>
             </div>
 
-            <!-- Error Alert (Demo) -->
-            <div class="error-alert" style="display: none;">
-                <strong>Terdapat kesalahan dalam pengisian form:</strong>
-                <ul class="error-list mt-2">
-                    <li>Nama wajib diisi</li>
-                    <li>Format NIM tidak valid</li>
-                </ul>
-            </div>
+            <!-- Success Message -->
+            @if(session('success'))
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <strong>Berhasil!</strong> {{ session('success') }}
+                </div>
+            @endif
+
+            <!-- Error Messages -->
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Terdapat kesalahan dalam pengisian form:</strong>
+                    <ul class="mt-2">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
             <!-- Form -->
-            <form action="#" method="POST" enctype="multipart/form-data">
-                <!-- CSRF Token would go here in Laravel -->
+            <form action="{{ route('daftar.store', $hima) }}" method="POST" enctype="multipart/form-data">
+                @csrf
                 
                 <div class="row">
                     <div class="col-md-6">
@@ -487,7 +508,12 @@
                                 Nama Lengkap
                                 <span class="required-indicator">*</span>
                             </label>
-                            <input type="text" name="nama" class="form-control" placeholder="Masukkan nama lengkap Anda" required>
+                            <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror" 
+                                   placeholder="Masukkan nama lengkap Anda" 
+                                   value="{{ old('nama') }}" required>
+                            @error('nama')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
@@ -498,7 +524,12 @@
                                 Nomor Induk Mahasiswa (NIM)
                                 <span class="required-indicator">*</span>
                             </label>
-                            <input type="text" name="nim" class="form-control" placeholder="Contoh: 12345678901" required>
+                            <input type="text" name="nim" class="form-control @error('nim') is-invalid @enderror" 
+                                   placeholder="Contoh: 12345678901" 
+                                   value="{{ old('nim') }}" required>
+                            @error('nim')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                 </div>
@@ -511,7 +542,12 @@
                                 Program Studi
                                 <span class="required-indicator">*</span>
                             </label>
-                            <input type="text" name="prodi" class="form-control" placeholder="Contoh: Teknik Informatika" required>
+                            <input type="text" name="prodi" class="form-control @error('prodi') is-invalid @enderror" 
+                                   placeholder="Contoh: Teknik Informatika" 
+                                   value="{{ old('prodi') }}" required>
+                            @error('prodi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
@@ -523,47 +559,98 @@
                                 <span class="required-indicator">*</span>
                             </label>
                             <div class="gender-select">
-                                <select name="jenkel" class="form-select" required>
+                                <select name="jenkel" class="form-select @error('jenkel') is-invalid @enderror" required>
                                     <option value="">-- Pilih Jenis Kelamin --</option>
-                                    <option value="Laki-laki">Laki-laki</option>
-                                    <option value="Perempuan">Perempuan</option>
+                                    <option value="Laki-laki" {{ old('jenkel') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                                    <option value="Perempuan" {{ old('jenkel') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                                 </select>
                             </div>
+                            @error('jenkel')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="form-label">
-                                <i class="fas fa-star"></i>
-                                Pilihan Posisi Pertama
-                                <span class="required-indicator">*</span>
-                                <div class="tooltip-custom">
-                                    <i class="fas fa-info-circle"></i>
-                                    <span class="tooltiptext">Pilihan posisi utama yang Anda inginkan dalam kepengurusan</span>
-                                </div>
-                            </label>
-                            <input type="text" name="pilihan1" class="form-control" placeholder="Contoh: Ketua, Sekretaris, Bendahara" required>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="form-label">
-                                <i class="fas fa-star-half-alt"></i>
-                                Pilihan Posisi Kedua
-                                <span class="required-indicator">*</span>
-                                <div class="tooltip-custom">
-                                    <i class="fas fa-info-circle"></i>
-                                    <span class="tooltiptext">Pilihan posisi alternatif jika pilihan pertama tidak tersedia</span>
-                                </div>
-                            </label>
-                            <input type="text" name="pilihan2" class="form-control" placeholder="Contoh: Wakil Ketua, Humas" required>
-                        </div>
-                    </div>
+    {{-- Pilihan Posisi Pertama --}}
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="form-label">
+                <i class="fas fa-star"></i>
+                Pilihan Posisi Pertama
+                <span class="required-indicator">*</span>
+                <div class="tooltip-custom">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="tooltiptext">Pilihan posisi utama yang Anda inginkan dalam kepengurusan</span>
                 </div>
+            </label>
+            <select name="pilihan1" class="form-select @error('pilihan1') is-invalid @enderror" required>
+                <option value="">-- Pilih Posisi Pertama --</option>
+                @foreach($jabatans as $jabatan)
+                    <option value="{{ $jabatan->nama }}" {{ old('pilihan1') == $jabatan->nama ? 'selected' : '' }}>
+                        {{ $jabatan->nama }}
+                    </option>
+                @endforeach
+            </select>
+            @error('pilihan1')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+    </div>
+
+    {{-- Pilihan Posisi Kedua --}}
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="form-label">
+                <i class="fas fa-star-half-alt"></i>
+                Pilihan Posisi Kedua
+                <span class="required-indicator">*</span>
+                <div class="tooltip-custom">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="tooltiptext">Pilihan posisi alternatif jika pilihan pertama tidak tersedia</span>
+                </div>
+            </label>
+            <select name="pilihan2" class="form-select @error('pilihan2') is-invalid @enderror" required>
+                <option value="">-- Pilih Posisi Kedua --</option>
+                @foreach($jabatans as $jabatan)
+                    <option value="{{ $jabatan->nama }}" {{ old('pilihan2') == $jabatan->nama ? 'selected' : '' }}>
+                        {{ $jabatan->nama }}
+                    </option>
+                @endforeach
+            </select>
+            @error('pilihan2')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+    </div>
+</div>
+
+
+                {{-- <!-- Optional: Jabatan Selection (if you want to use the dropdown) -->
+                @if(isset($jabatans) && $jabatans->count() > 0)
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-briefcase"></i>
+                        Pilih Jabatan (Opsional)
+                        <div class="tooltip-custom">
+                            <i class="fas fa-info-circle"></i>
+                            <span class="tooltiptext">Pilih jabatan yang tersedia atau kosongkan jika ingin mengisi manual</span>
+                        </div>
+                    </label>
+                    <select name="jabatan_id" class="form-select @error('jabatan_id') is-invalid @enderror">
+                        <option value="">-- Pilih Jabatan (Opsional) --</option>
+                        @foreach($jabatans as $jabatan)
+                            <option value="{{ $jabatan->id }}" {{ old('jabatan_id') == $jabatan->id ? 'selected' : '' }}>
+                                {{ $jabatan->nama }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('jabatan_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                @endif --}}
 
                 <div class="form-group">
                     <label class="form-label">
@@ -571,25 +658,28 @@
                         Unggah Berkas Pendukung
                         <div class="tooltip-custom">
                             <i class="fas fa-info-circle"></i>
-                            <span class="tooltiptext">Format PDF, maksimal 2MB. Berisi CV, surat motivasi, atau portofolio</span>
+                            <span class="tooltiptext">Format PDF/DOC/DOCX, maksimal 2MB. Berisi CV, surat motivasi, atau portofolio</span>
                         </div>
                     </label>
                     <div class="file-input-wrapper">
-                        <input type="file" name="file" accept="application/pdf" class="file-input">
+                        <input type="file" name="file" accept=".pdf,.doc,.docx" class="file-input @error('file') is-invalid @enderror">
                         <div class="file-input-display">
                             <i class="fas fa-cloud-upload-alt"></i>
                             <span class="file-input-text">Klik untuk memilih file atau drag & drop file di sini</span>
                         </div>
                     </div>
+                    @error('file')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                     <small class="text-muted mt-1 d-block">
                         <i class="fas fa-info-circle me-1"></i>
-                        Format yang didukung: PDF (maksimal 2MB)
+                        Format yang didukung: PDF, DOC, DOCX (maksimal 2MB)
                     </small>
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="button-group">
-                    <a href="#" class="btn-custom btn-secondary-custom">
+                    <a href="{{ url()->previous() }}" class="btn-custom btn-secondary-custom">
                         <i class="fas fa-times"></i>
                         Batal
                     </a>
@@ -614,32 +704,6 @@
             if (e.target.files[0]) {
                 document.querySelector('.file-input-display').style.borderColor = 'var(--primary)';
                 document.querySelector('.file-input-display').style.backgroundColor = 'rgba(138, 82, 233, 0.05)';
-            }
-        });
-
-        // Form validation preview
-        document.querySelector('form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Simple validation demo
-            const requiredFields = document.querySelectorAll('input[required], select[required]');
-            let hasError = false;
-            
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    field.style.borderColor = 'var(--danger)';
-                    hasError = true;
-                } else {
-                    field.style.borderColor = 'var(--success)';
-                }
-            });
-            
-            if (hasError) {
-                document.querySelector('.error-alert').style.display = 'block';
-                document.querySelector('.error-alert').scrollIntoView({ behavior: 'smooth' });
-            } else {
-                alert('Form berhasil disubmit! (Demo mode)');
-                // In real application, form would be submitted here
             }
         });
 
@@ -691,11 +755,18 @@
             const dt = e.dataTransfer;
             const files = dt.files;
             
-            if (files.length > 0 && files[0].type === 'application/pdf') {
-                fileInput.files = files;
-                document.querySelector('.file-input-text').textContent = files[0].name;
-                fileInputDisplay.style.borderColor = 'var(--primary)';
-                fileInputDisplay.style.backgroundColor = 'rgba(138, 82, 233, 0.05)';
+            if (files.length > 0) {
+                const file = files[0];
+                const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                
+                if (allowedTypes.includes(file.type)) {
+                    fileInput.files = files;
+                    document.querySelector('.file-input-text').textContent = file.name;
+                    fileInputDisplay.style.borderColor = 'var(--primary)';
+                    fileInputDisplay.style.backgroundColor = 'rgba(138, 82, 233, 0.05)';
+                } else {
+                    alert('File harus berformat PDF, DOC, atau DOCX');
+                }
             }
         }
     </script>

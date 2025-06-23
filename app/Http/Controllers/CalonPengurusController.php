@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CalonPengurus;
+use App\Models\DaftarHima;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,7 +14,7 @@ class CalonPengurusController extends Controller
      */
     public function index()
     {
-        $calonPengurus = CalonPengurus::latest()->paginate(10);
+        $calonPengurus = DaftarHima::latest()->paginate(10);
         return view('pengurus.calon_pengurus.index', compact('calonPengurus'));
     }
 

@@ -70,47 +70,54 @@ class DataPengurusController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(DataPengurus $dataPengurus)
-    {
-
-        return view('pengurus.data_pengurus.edit', compact('dataPengurus'));
+   public function edit(DataPengurus $dataPengurus)
+{
+  
     
-    }
+    // Ambil semua jabatan untuk dropdown
+    $jabatans = Jabatan::where('user_id', Auth::id())->orderBy('nama')->get();
+    
+    return view('pengurus.data_pengurus.edit', compact('dataPengurus', 'jabatans'));
+}
 
-    public function update(Request $request, DataPengurus $dataPengurus)
-    {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'nrp' => 'required|string|max:255',
-            'jabatan_id' => 'required|exists:jabatans,id',
-            'periode' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+public function update(Request $request, DataPengurus $dataPengurus)
+{
+ 
 
-        $pengurus = DataPengurus::findOrFail($id);
+    // Validasi input
+    $request->validate([
+        'nama' => 'required|string|max:255',
+        'nrp' => 'required|string|max:255',
+        'jabatan_id' => 'required|exists:jabatans,id',
+        'periode' => 'required|string|max:255',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        // Update data
-        $pengurus->nama = $request->nama;
-        $pengurus->nrp = $request->nrp;
-        $pengurus->jabatan_id = $request->jabatan_id;
-        $pengurus->periode = $request->periode;
+    // Siapkan data untuk update
+    $updateData = [
+        'nama' => $request->nama,
+        'nrp' => $request->nrp,
+        'jabatan_id' => $request->jabatan_id,
+        'periode' => $request->periode,
+    ];
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($pengurus->image && Storage::disk('public')->exists($pengurus->image)) {
-                Storage::disk('public')->delete($pengurus->image);
-            }
-
-            // Store new image
-            $imagePath = $request->file('image')->store('pengurus', 'public');
-            $pengurus->image = $imagePath;
+    // Handle image upload jika ada file baru
+    if ($request->hasFile('image')) {
+        // Hapus gambar lama jika ada
+        if ($dataPengurus->image && Storage::disk('public')->exists($dataPengurus->image)) {
+            Storage::disk('public')->delete($dataPengurus->image);
         }
 
-        $pengurus->save();
-
-        return redirect()->route('data_pengurus.index')->with('success', 'Data pengurus berhasil diupdate!');
+        // Simpan gambar baru
+        $imagePath = $request->file('image')->store('pengurus', 'public');
+        $updateData['image'] = $imagePath;
     }
+
+    // Update data pengurus
+    $dataPengurus->update($updateData);
+
+    return redirect()->route('data_pengurus.index')->with('success', 'Data pengurus berhasil diupdate!');
+}
 
     /**
      * Update the specified resource in storage.

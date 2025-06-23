@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\CalonPengurusController;
+use App\Http\Controllers\DaftarHimaController;
 use App\Http\Controllers\DataAlumniController;
 use App\Http\Controllers\DataPengurusController;
 use App\Http\Controllers\HimaController;
@@ -24,19 +25,6 @@ Route::get('/', function () {
     $info_kegiatans = InfoKegiatan::all();
     return view('welcome', compact('himas', 'info_kegiatans'));
 });
-Route::get('/daftar', function () {
-    $himas = Hima::all();
-    return view('daftar', compact('himas'));
-});
-// Route::get('/home/{himas}', function (Hima $himas) {
-//     $himas->load('user');
-//     $info_kegiatans = InfoKegiatan::all();
-//      // Ambil semua data pengurus
-//         $jabatans = Jabatan::all();
-//     // untuk mengambil data pengurus dan menaruh di sturktur organisasi jika jabatan nya ketua, wakil ketua, sekertaris,bendahara
-//         $pengurus = DataPengurus::where('user_id', )->get();
-//     return view('detail', compact('himas','info_kegiatans'));
-// })->name('home.show');
 
 // Route yang diperbaiki
 Route::get('/home/{himas}', function (Hima $himas) {
@@ -65,6 +53,12 @@ Route::get('/home/{himas}', function (Hima $himas) {
 })->name('home.show');
 
 
+// Route untuk menampilkan form pendaftaran spesifik hima
+Route::get('/daftar/{hima}', [DaftarHimaController::class, 'create'])->name('daftar.create');
+
+// Route untuk menyimpan pendaftaran
+Route::post('/daftar/{hima}', [DaftarHimaController::class, 'store'])->name('daftar.store');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -91,7 +85,9 @@ Route::middleware('auth')->group(function () {
         Route::resource('hima', HimaController::class)->middleware(['auth', 'verified']);
         // Route::resource('beranda',BerandaController::class)->middleware(['auth', 'verified']);
         Route::resource('jabatan', JabatanController::class)->middleware(['auth', 'verified']);
-        Route::resource('data_pengurus', DataPengurusController::class)->middleware(['auth', 'verified']);
+     Route::resource('data_pengurus', DataPengurusController::class)->parameters([
+    'data_pengurus' => 'data_pengurus',
+])->middleware(['auth', 'verified']);
         Route::resource('sk', SkController::class)->middleware(['auth', 'verified']);
         Route::resource('info_kegiatan', InfoKegiatanController::class)->middleware(['auth', 'verified']);
         Route::resource('keuangan', KeuanganController::class)->middleware(['auth', 'verified']);
