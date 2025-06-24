@@ -40,9 +40,9 @@ class DataPengurusController extends Controller
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'nama' => 'required|string|max:250',
-            'nrp' => 'required|string|max:1000',
+            'nrp' => 'required|string|max:25',
             'jabatan_id' => 'required|string|max:1000',
-            'periode' => 'required|string|max:1000',
+         'periode' => ['required', 'regex:/^\d{4}-\d{4}$/'],
         ]);
         // Simpan logo ke storage
         $imagePath = $request->file('image')->store('foto_pengurus', 'public');
@@ -87,9 +87,9 @@ public function update(Request $request, DataPengurus $dataPengurus)
     // Validasi input
     $request->validate([
         'nama' => 'required|string|max:255',
-        'nrp' => 'required|string|max:255',
+        'nrp' => 'required|string|max:25',
         'jabatan_id' => 'required|exists:jabatans,id',
-        'periode' => 'required|string|max:255',
+        'periode' => ['required', 'regex:/^\d{4}-\d{4}$/'],
         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
 

@@ -33,7 +33,7 @@
                             </div>
                             <div>
                                 <label class="block mb-2 text-sm font-medium text-gray-700">NRP</label>
-                                <input type="text" name="nrp" placeholder="NRP"
+                                <input type="number" name="nrp" placeholder="NRP"
                                     class="shadow-sm block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 @error('nrp') border-red-500 @enderror"
                                     value="{{ old('nrp') }}" required>
                                 @error('nrp')
@@ -60,7 +60,7 @@
 
                             <div>
                                 <label class="block mb-2 text-sm font-medium text-gray-700">Periode</label>
-                                <input type="text" name="periode" placeholder="Contoh: 2022"
+                                <input type="text" name="periode" placeholder="Contoh: 2022-2023"
                                     class="shadow-sm block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 @error('periode') border-red-500 @enderror"
                                     value="{{ old('periode') }}" required>
                                 @error('periode')
