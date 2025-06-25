@@ -167,7 +167,7 @@
                                     <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Uang Keluar</th>
                                     <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Keterangan</th>
                                     <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Bukti</th>
-                                    <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Saldo</th>
+                                    <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Jumlah Uang</th>
                                     <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Action</th>
                                 </tr>
                             </thead>

@@ -184,13 +184,7 @@
             font-size: 1.5rem;
         }
 
-        .features-section {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            padding: 50px 0;
-            color: white;
-            margin: 40px 0;
-            border-radius: 30px;
-        }
+       
 
         .feature-item {
             display: flex;
@@ -483,9 +477,9 @@
                 <div class="col-lg-3 col-md-6">
                     <h5 class="mb-4">Kontak Kami</h5>
                     <ul class="footer-links">
-                        <li><i class="fas fa-map-marker-alt me-2"></i> Jl. Universitas No. 123</li>
-                        <li><i class="fas fa-phone me-2"></i> (021) 1234-5678</li>
-                        <li><i class="fas fa-envelope me-2"></i> info@himapusat.ac.id</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i> Ray V, Jl. Brigjen H. hasan Basri, Handil Bakti, Kec. Alalak, Kabupaten Barito Kuala, Kalimantan Selatan 70582</li>
+                        <li><i class="fas fa-phone me-2"></i> 0851-0015-6666</li>
+                        <li><i class="fas fa-envelope me-2"></i> polhas</li>
                     </ul>
                 </div>
             </div>

@@ -99,6 +99,7 @@ public function update(Request $request, DataPengurus $dataPengurus)
         'nrp' => $request->nrp,
         'jabatan_id' => $request->jabatan_id,
         'periode' => $request->periode,
+        'image' => $request->imagePath,
     ];
 
     // Handle image upload jika ada file baru
