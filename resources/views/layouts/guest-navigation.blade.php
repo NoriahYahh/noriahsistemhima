@@ -1,59 +1,32 @@
-<!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container">
-        <!-- Brand dengan Dropdown -->
-        <div class="dropdown">
-            <a class="navbar-brand dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                HIMA
-            </a>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="">HIMA Teknik Informatika</a></li>
-                <li><a class="dropdown-item" href="">HIMA Sistem Informasi</a></li>
-                <li><a class="dropdown-item" href="">HIMA Teknik Komputer</a></li>
-                <li><a class="dropdown-item" href="">HIMA Manajemen</a></li>
-                <li><a class="dropdown-item" href="">HIMA Akuntansi</a></li>
-                <li><a class="dropdown-item" href="">HIMA Ekonomi</a></li>
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="">Semua HIMA</a></li>
-            </ul>
-            {{-- <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{{ route('hima.informatika') }}">HIMA Teknik Informatika</a></li>
-                <li><a class="dropdown-item" href="{{ route('hima.sistem-informasi') }}">HIMA Sistem Informasi</a></li>
-                <li><a class="dropdown-item" href="{{ route('hima.teknik-komputer') }}">HIMA Teknik Komputer</a></li>
-                <li><a class="dropdown-item" href="{{ route('hima.manajemen') }}">HIMA Manajemen</a></li>
-                <li><a class="dropdown-item" href="{{ route('hima.akuntansi') }}">HIMA Akuntansi</a></li>
-                <li><a class="dropdown-item" href="{{ route('hima.ekonomi') }}">HIMA Ekonomi</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="{{ route('hima.semua') }}">Semua HIMA</a></li>
-            </ul> --}}
-        </div>
+   <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                        <i class="fas fa-graduation-cap text-white text-lg"></i>
+                    </div>
+                    <span class="text-2xl font-bold text-primary">SiHima</span>
+                </div>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="{{route('home')}}" class="text-gray-700 hover:text-primary font-medium">HOME</a>
+                    <a href="{{ route('home') }}#hima" class="text-gray-700 hover:text-primary font-medium">HIMA</a>
+                    <a href="{{ route('home') }}#benefit" class="text-gray-700 hover:text-primary font-medium">BENEFIT</a>
+                    <a href="{{ route('home') }}#kegiatan" class="text-gray-700 hover:text-primary font-medium">KEGIATAN</a>
+                    
+                </div>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/kegiatan') }}">Kegiatan</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Struktur</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Berita</a>
-                </li>
-            </ul>
-            <div>
-                {{-- <a href="#" class="btn btn-outline-primary me-2">Daftar</a> --}}
-                <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+                <div class="flex items-center space-x-4">
+                    <a href="{{route('login')}}"
+                        class="bg-primary text-white px-6 py-2 rounded-full font-medium hover:bg-primary-dark transition-colors">
+                        Sign In
+                    </a>
+                    {{-- <a
+                        class="border border-primary text-primary px-6 py-2 rounded-full font-medium hover:bg-primary hover:text-white transition-colors">
+                        Sign Up
+                    </a> --}}
+                </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav

@@ -17,17 +17,15 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('sk.store') }}" method="POST" enctype="multipart/form-data" class="mb-10 space-y-6">
+                    <form action="{{ route('sk.store') }}" method="POST" enctype="multipart/form-data"
+                        class="mb-10 space-y-6">
                         @csrf
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
                             <div>
                                 <label class="block mb-2 text-sm font-medium text-gray-700">File :</label>
                                 <div class="flex items-center">
-                                    <input 
-                                        type="file" 
-                                        name="file" 
-                                        class="shadow-sm block w-full text-sm text-gray-700 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-                                    >
+                                    <input type="file" name="file"
+                                        class="shadow-sm block w-full text-sm text-gray-700 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                                 </div>
                                 @error('file')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -35,30 +33,43 @@
                             </div>
                             <div>
                                 <label class="block mb-2 text-sm font-medium text-gray-700">Keterangan :</label>
-                                <input 
-                                    type="text" 
-                                    name="keterangan" 
-                                    placeholder="Masukkan keterangan"
+                                <input type="text" name="keterangan" placeholder="Masukkan keterangan"
                                     class="shadow-sm block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-                                    value="{{ old('keterangan') }}"
-                                >
+                                    value="{{ old('keterangan') }}">
                                 @error('keterangan')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @role('admin')
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-700">Untuk:</label>
+                                <select name="for_user_id"
+                                    class="shadow-sm block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+                                    <option value="">-- Pilih Pengurus --</option>
+                                    @foreach ($pengurusUsers as $user)
+                                        <option value="{{ $user->id }}"
+                                            {{ old('for_user_id') == $user->id ? 'selected' : '' }}>
+                                            {{ $user->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('for_user_id')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            @endrole
+
                         </div>
 
                         <div class="flex justify-start">
-                            <button 
-                                type="submit" 
-                                class="mt-6 bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-md transition duration-200"
-                            >
+                            <button type="submit"
+                                class="mt-6 bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-md transition duration-200">
                                 Tambahkan
                             </button>
                         </div>
                     </form>
 
-                  
+
                 </div>
             </div>
         </div>

@@ -16,50 +16,34 @@
                             {{ session('success') }}
                         </div>
                     @endif
-                    {{-- 
-                    <form action="{{ route('sk.store') }}" method="POST" enctype="multipart/form-data" class="mb-10 space-y-6">
-                        @csrf
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
-                            <div>
-                                <label class="block mb-2 text-sm font-medium text-gray-700">File :</label>
-                                <div class="flex items-center">
-                                    <input 
-                                        type="file" 
-                                        name="file" 
-                                        class="shadow-sm block w-full text-sm text-gray-700 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-                                    >
-                                </div>
-                                @error('file')
-                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div>
-                                <label class="block mb-2 text-sm font-medium text-gray-700">Keterangan :</label>
-                                <input 
-                                    type="text" 
-                                    name="keterangan" 
-                                    placeholder="Masukkan keterangan"
-                                    class="shadow-sm block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-                                    value="{{ old('keterangan') }}"
-                                >
-                                @error('keterangan')
-                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
 
-                        <div class="flex justify-start">
-                            <button 
-                                type="submit" 
-                                class="mt-6 bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-md transition duration-200"
-                            >
-                                Tambahkan
-                            </button>
-                        </div>
-                    </form> --}}
 
-                    {{-- bagian untuk button tambah --}}
                     <div class="mb-4 text-right">
+                     <form method="GET" action="{{ route('sk.index') }}" class="mb-4 max-w-2xl flex space-x-2">
+    <!-- Dropdown Pengunggah -->
+    <select name="search" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="">-- Pilih Pengunggah --</option>
+        @foreach ($users as $uploader)
+            <option value="{{ $uploader->id }}" {{ request('search') == $uploader->id ? 'selected' : '' }}>
+                {{ $uploader->name }}
+            </option>
+        @endforeach
+    </select>
+
+    <!-- Dropdown Tahun -->
+    <select name="year" class="w-48 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="">-- Semua Tahun --</option>
+        @foreach ($years as $year)
+            <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>{{ $year }}</option>
+        @endforeach
+    </select>
+
+    <!-- Tombol Cari -->
+    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">
+        Cari
+    </button>
+</form>
+
                         <a href="{{ route('sk.create') }}"
                             class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md">
                             Tambah
@@ -70,7 +54,15 @@
                             <thead class="bg-gray-400 text-gray-700">
                                 <tr>
                                     <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">
+                                        Pengupload</th>
+                                    @role('admin')
+                                        <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">
+                                            Untuk</th>
+                                    @endrole
+                                    <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">
                                         Keterangan</th>
+                                            <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">
+                                        Tanggal di buat</th>
                                     <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">File
                                     </th>
                                     <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">
@@ -80,7 +72,19 @@
                             <tbody class="bg-gray-100">
                                 @forelse ($skList as $sk)
                                     <tr class="border-t border-gray-200">
+                                        <td class="px-6 py-4 text-sm">{{ $sk->user->name }}</td>
+                                        @role('admin')
+                                            <td class="px-6 py-4 text-sm">
+                                                @if ($sk->foruser)
+                                                    {{ $sk->foruser->name }}
+                                                @else
+                                                    <span class="text-gray-400">Tidak ada user</span>
+                                                @endif
+                                            </td>
+                                        @endrole
+
                                         <td class="px-6 py-4 text-sm">{{ $sk->keterangan }}</td>
+                                        <td class="px-6 py-4 text-sm">{{ $sk->created_at }}</td>
                                         <td class="px-6 py-4 text-sm">
                                             <div class="flex space-x-2">
                                                 <a href="{{ route('sk.show', $sk) }}" target="_blank"

@@ -11,10 +11,17 @@ class Sk extends Model
         'file',
         'keterangan',
         'user_id',
+        'for_user_id'
     ];
     
 
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+   public function foruser()
+{
+    return $this->belongsTo(User::class, 'for_user_id');
+}
+
 }

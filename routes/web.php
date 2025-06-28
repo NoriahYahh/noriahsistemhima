@@ -19,36 +19,48 @@ use App\Models\Hima;
 use App\Models\InfoKegiatan;
 use App\Models\Jabatan;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
-Route::get('/', function () {
+Route::get('/', function (Request $request) {
     $himas = Hima::all();
-    $info_kegiatans = InfoKegiatan::all();
+
+    $query = InfoKegiatan::query();
+
+    if ($request->has('search')) {
+        $search = $request->input('search');
+        $query->where('nama', 'like', "%$search%")
+            ->orWhere('keterangan', 'like', "%$search%");
+    }
+
+    $info_kegiatans = $query->paginate(6); // agar pagination tetap bawa query
+
     return view('welcome', compact('himas', 'info_kegiatans'));
-});
+})->name('home');
 
 // Route yang diperbaiki
 Route::get('/home/{himas}', function (Hima $himas) {
     $himas->load('user');
-    $info_kegiatans = InfoKegiatan::all();
-    
+    $info_kegiatans = InfoKegiatan::where('user_id', $himas->user_id)->get();
+
+
     // Ambil semua data jabatan
     $jabatans = Jabatan::all();
-    
+
     // Ambil data pengurus berdasarkan user_id dari himas
     // Menggunakan user_id karena Jabatan memiliki relasi ke User
-    $pengurus = DataPengurus::whereHas('jabatan', function($query) use ($himas) {
-                               $query->where('user_id', $himas->user_id);
-                           })
-                           ->with(['user', 'jabatan']) // Load relasi user dan jabatan
-                           ->get();
-    
+    $pengurus = DataPengurus::whereHas('jabatan', function ($query) use ($himas) {
+        $query->where('user_id', $himas->user_id);
+    })
+        ->with(['user', 'jabatan']) // Load relasi user dan jabatan
+        ->get();
+
     // Alternatif jika ingin mengambil semua pengurus dari jabatan yang dibuat oleh user himas
     // $pengurus = DataPengurus::with(['user', 'jabatan'])
     //                        ->whereIn('jabatan_id', 
     //                            Jabatan::where('user_id', $himas->user_id)->pluck('id')
     //                        )
     //                        ->get();
-    
+
     return view('detail', compact('himas', 'info_kegiatans', 'pengurus', 'jabatans'));
 })->name('home.show');
 
@@ -63,13 +75,6 @@ Route::post('/daftar/{hima}', [DaftarHimaController::class, 'store'])->name('daf
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-// Route::get('/hima', function () {
-//     return view('pengurus.data_hima.index');
-// })->middleware(['auth', 'verified'])->name('hima');
-// Route::get('/hima-input',  () {
-//     return view('pengurus.data_functionhima.create');
-// })->middleware(['auth', 'verified'])->name('hima.create');
-
 
 
 Route::middleware('auth')->group(function () {
@@ -80,15 +85,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::resource('sk', SkController::class)->middleware(['auth', 'verified']);
 
     Route::middleware('can:crud data hima')->group(function () {
         Route::resource('hima', HimaController::class)->middleware(['auth', 'verified']);
         // Route::resource('beranda',BerandaController::class)->middleware(['auth', 'verified']);
         Route::resource('jabatan', JabatanController::class)->middleware(['auth', 'verified']);
-     Route::resource('data_pengurus', DataPengurusController::class)->parameters([
-    'data_pengurus' => 'data_pengurus',
-])->middleware(['auth', 'verified']);
-        Route::resource('sk', SkController::class)->middleware(['auth', 'verified']);
+        Route::resource('data_pengurus', DataPengurusController::class)->parameters([
+            'data_pengurus' => 'data_pengurus',
+        ])->middleware(['auth', 'verified']);
+        // Route::resource('sk', SkController::class)->middleware(['auth', 'verified']);
         Route::resource('info_kegiatan', InfoKegiatanController::class)->middleware(['auth', 'verified']);
         Route::resource('keuangan', KeuanganController::class)->middleware(['auth', 'verified']);
         Route::resource('data_alumni', DataAlumniController::class)->middleware(['auth', 'verified']);
@@ -101,12 +107,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/{hima}/pengurus', [AdminController::class, 'datapengurus'])->name('adminhima.pengurus');
         Route::get('/admin/{hima}/proker', [AdminController::class, 'proker'])->name('adminhima.proker');
         Route::get('/admin/{hima}/laporan_kegiatan', [AdminController::class, 'laporan_kegiatan'])->name('adminhima.laporan_kegiatan');
-      Route::patch('/admin/{hima}/laporan_kegiatan/{id}/update-status', [AdminController::class, 'updateStatus'])->name('adminhima.laporan_kegiatan.update-status');
+        Route::patch('/admin/{hima}/laporan_kegiatan/{id}/update-status', [AdminController::class, 'updateStatus'])->name('adminhima.laporan_kegiatan.update-status');
 
-       Route::resource('akun', AdminController::class)->parameters([
-    'akun' => 'user',
-]);
-
+        Route::resource('akun', AdminController::class)->parameters([
+            'akun' => 'user',
+        ]);
     });
 });
 
