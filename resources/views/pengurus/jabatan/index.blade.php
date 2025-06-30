@@ -185,29 +185,34 @@
         }
 
         // Edit Jabatan Functions
-        function editJabatan(id) {
-            currentJabatanId = id;
-            
-            // Fetch jabatan data
-            fetch(`/jabatan/${id}/edit`, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('edit_nama').value = data.nama;
-                document.getElementById('editModal').classList.remove('hidden');
-                document.getElementById('edit_nama').focus();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showErrorMessage('Terjadi kesalahan saat mengambil data jabatan.');
-            });
+    function editJabatan(id) {
+    currentJabatanId = id;
+    
+    // Fetch jabatan data
+    fetch(`/jabatan/${id}/edit`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
         }
-
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        document.getElementById('edit_nama').value = data.nama;
+        document.getElementById('editModal').classList.remove('hidden');
+        document.getElementById('edit_nama').focus();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showErrorMessage('Terjadi kesalahan saat mengambil data jabatan.');
+    });
+}
         function closeEditModal() {
             document.getElementById('editModal').classList.add('hidden');
             document.getElementById('edit_nama_error').classList.add('hidden');
@@ -216,41 +221,50 @@
         }
 
         // Handle edit form submission
-        document.getElementById('editForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData();
-            formData.append('nama', document.getElementById('edit_nama').value);
-            formData.append('_method', 'PUT');
-            formData.append('_token', document.querySelector('input[name="_token"]').value);
-            
-            fetch(`/jabatan/${currentJabatanId}`, {
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Update the table row
-                    document.getElementById(`jabatan-nama-${currentJabatanId}`).textContent = data.data.nama;
-                    closeEditModal();
-                    showSuccessMessage(data.message);
-                } else {
-                    // Show validation errors
-                    if (data.errors && data.errors.nama) {
-                        document.getElementById('edit_nama_error').textContent = data.errors.nama[0];
-                        document.getElementById('edit_nama_error').classList.remove('hidden');
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showErrorMessage('Terjadi kesalahan saat mengupdate jabatan.');
-            });
-        });
+       document.getElementById('editForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    formData.append('nama', document.getElementById('edit_nama').value);
+    formData.append('_method', 'PUT');
+    
+    // Ambil CSRF token dari form yang ada
+    const csrfToken = document.querySelector('input[name="_token"]').value;
+    formData.append('_token', csrfToken);
+    
+    fetch(`/jabatan/${currentJabatanId}`, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        },
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Update the table row
+            document.getElementById(`jabatan-nama-${currentJabatanId}`).textContent = data.data.nama;
+            closeEditModal();
+            showSuccessMessage(data.message);
+        } else {
+            // Show validation errors
+            if (data.errors && data.errors.nama) {
+                document.getElementById('edit_nama_error').textContent = data.errors.nama[0];
+                document.getElementById('edit_nama_error').classList.remove('hidden');
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showErrorMessage('Terjadi kesalahan saat mengupdate jabatan.');
+    });
+});
 
         // Delete Jabatan Functions
         function deleteJabatan(id) {
@@ -263,30 +277,43 @@
             currentJabatanId = null;
         }
 
-        function confirmDelete() {
-            fetch(`/jabatan/${currentJabatanId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Remove the table row
-                    document.getElementById(`jabatan-row-${currentJabatanId}`).remove();
-                    closeDeleteModal();
-                    showSuccessMessage(data.message);
-                } else {
-                    showErrorMessage('Terjadi kesalahan saat menghapus jabatan.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showErrorMessage('Terjadi kesalahan saat menghapus jabatan.');
-            });
+   function confirmDelete() {
+    // Ambil CSRF token
+    const csrfToken = document.querySelector('input[name="_token"]').value;
+    
+    const formData = new FormData();
+    formData.append('_method', 'DELETE');
+    formData.append('_token', csrfToken);
+    
+    fetch(`/jabatan/${currentJabatanId}`, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        },
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Remove the table row
+            document.getElementById(`jabatan-row-${currentJabatanId}`).remove();
+            closeDeleteModal();
+            showSuccessMessage(data.message);
+        } else {
+            showErrorMessage('Terjadi kesalahan saat menghapus jabatan.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showErrorMessage('Terjadi kesalahan saat menghapus jabatan.');
+    });
+}
 
         // Close modal when clicking outside
         document.getElementById('editModal').addEventListener('click', function(e) {
@@ -309,4 +336,6 @@
             }
         });
     </script>
+     <!-- Tambahkan ini untuk token browser-->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </x-app-layout>

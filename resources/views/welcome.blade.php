@@ -215,16 +215,7 @@
             <p class="text-xl text-gray-600 text-center mb-12">Berbagai kegiatan menarik untuk mengembangkan potensi
                 mahasiswa</p>
 
-            {{-- <form class="max-w-md mx-auto mb-12">
-                <div class="relative">
-                    <input type="text" name="search" placeholder="Cari kegiatan..."
-                        class="w-full px-6 py-4 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                    <button type="submit"
-                        class="absolute right-2 top-2 bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary-dark transition-colors">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </form> --}}
+           {{-- bagian search kegiatan --}}
             <form action="{{ route('home') }}#kegiatan" method="GET" class="max-w-md mx-auto mb-12">
                 <div class="relative">
                     <input type="text" name="search" placeholder="Cari kegiatan..."

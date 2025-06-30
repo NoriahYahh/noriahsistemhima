@@ -1,6 +1,6 @@
 <x-guest-layout>
     <!-- Login Container -->
-    <div class="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 flex justify-center items-center p-4">
+    <div class="min-h-screen bg-primary-dark from-indigo-500 via-purple-600 to-pink-500 flex justify-center items-center p-4">
         <div class="w-full max-w-md">
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
                 <!-- Header -->
