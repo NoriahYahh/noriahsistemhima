@@ -86,6 +86,8 @@
                                 >
                                     Simpan Perubahan
                                 </button>
+                        <a href="{{ redirect()->back()->getTargetUrl() }}" class="ml-2 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded-md transition duration-200">Kembali</a>
+
                             </div>
                         </div>
                     </form>

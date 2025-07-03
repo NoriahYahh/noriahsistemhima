@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Jabatan extends Model
 {
-    protected $fillable = ['nama',
-        'user_id',];
+   protected $fillable = ['nama', 'deskripsi', 'tingkatan', 'user_id'];
+
     
     public function datapengurus(){
         return $this->hasMany(DataPengurus::class);

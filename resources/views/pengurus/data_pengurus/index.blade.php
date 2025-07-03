@@ -107,6 +107,10 @@
                                     <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">
                                         Periode</th>
                                     <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">
+                                        Status
+                                    </th>
+
+                                    <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">
                                         Action</th>
                                 </tr>
                             </thead>
@@ -116,8 +120,7 @@
                                         <td class="px-6 py-4 text-sm">
                                             @if ($p->image)
                                                 <img src="{{ Storage::url($p->image) }}"
-                                                    class="w-16 h-16 object-cover rounded-md"
-                                                    alt="{{ $p->name }}">
+                                                    class="w-16 h-16 object-cover rounded-md" alt="{{ $p->name }}">
                                             @else
                                                 <div class="w-16 h-16 bg-gray-300 rounded-md"></div>
                                             @endif
@@ -126,10 +129,18 @@
                                         <td class="px-6 py-4 text-sm">{{ $p->nrp }}</td>
                                         <td class="px-6 py-4 text-sm">{{ $p->jabatan->nama }}</td>
                                         <td class="px-6 py-4 text-sm">{{ $p->periode }}</td>
+                                        <td class="px-6 py-4 text-sm">
+                                            @if ($p->is_alumni)
+                                                <span class="text-green-600 font-semibold">Alumni</span>
+                                            @else
+                                                <span class="text-blue-600 font-semibold">Aktif</span>
+                                            @endif
+                                        </td>
 
                                         <td class="px-6 py-4 text-sm">
                                             <div class="flex space-x-4">
-                                                <a href="{{route('data_pengurus.edit',$p->id)}}" type="button" onclick="editPengurus({{ $p->id }})"
+                                                <a href="{{ route('data_pengurus.edit', $p->id) }}" type="button"
+                                                    onclick="editPengurus({{ $p->id }})"
                                                     class="text-blue-600 hover:text-blue-800 font-medium">
                                                     Edit
                                                 </a>
@@ -159,7 +170,7 @@
     </div>
 
     <!-- Modal Edit -->
-    <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+    {{-- <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
         <div class="bg-white p-8 rounded-lg w-full max-w-2xl">
             <h2 class="text-xl font-bold mb-6">Edit Data Pengurus</h2>
 
@@ -191,6 +202,13 @@
                             class="shadow-sm block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                             required>
                     </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" name="is_alumni" id="is_alumni"
+                            class="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                            {{ old('is_alumni') ? 'checked' : '' }}>
+                        <label for="is_alumni" class="text-sm text-gray-700">Tandai sebagai Alumni</label>
+                    </div>
+
                     <div class="md:col-span-2">
                         <label class="block mb-2 text-sm font-medium text-gray-700">Image</label>
                         <input type="file" name="image"
@@ -211,7 +229,7 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div> --}}
 
     <script>
         function editPengurus(id) {

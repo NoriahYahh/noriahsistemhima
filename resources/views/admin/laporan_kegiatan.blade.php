@@ -21,11 +21,10 @@
                     <div class="text-center text-gray-500 mb-8">
                         Berikut adalah daftar Laporan Kegiatan HIMA {{ $hima->nama }}
                     </div>
-                    <a href="path/to/your-file.pdf" 
-   download 
-   class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
-   Download
-</a>
+                    {{-- <a href="path/to/your-file.pdf" download
+                        class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+                        Download
+                    </a> --}}
                     @if (session('success'))
                         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
                             role="alert">
@@ -223,22 +222,30 @@
                                             </td>
                                             <td class="px-6 py-4 text-sm text-gray-600">
                                                 {{-- Status dengan Select Dropdown --}}
-                                                <form action="{{ route('adminhima.laporan_kegiatan.update-status', [$hima->id, $laporan->id]) }}" method="POST" class="inline-block">
+                                                <form
+                                                    action="{{ route('adminhima.laporan_kegiatan.update-status', [$hima->id, $laporan->id]) }}"
+                                                    method="POST" class="inline-block">
                                                     @csrf
                                                     @method('PATCH')
-                                                    <select name="status" onchange="this.form.submit()" 
+                                                    <select name="status" onchange="this.form.submit()"
                                                         class="text-xs px-2 py-1 rounded-full border-0 font-medium focus:ring-2 focus:ring-blue-500
-                                                        {{ $laporan->status == 'Terverifikasi' ? 'bg-green-100 text-green-800' : 
-                                                           ($laporan->status == 'Ditolak' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
-                                                        <option value="Terverifikasi" {{ $laporan->status == 'Terverifikasi' ? 'selected' : '' }}>
+                                                        {{ $laporan->status == 'Terverifikasi'
+                                                            ? 'bg-green-100 text-green-800'
+                                                            : ($laporan->status == 'Ditolak'
+                                                                ? 'bg-red-100 text-red-800'
+                                                                : 'bg-yellow-100 text-yellow-800') }}">
+                                                        <option value="Terverifikasi"
+                                                            {{ $laporan->status == 'Terverifikasi' ? 'selected' : '' }}>
                                                             Terverifikasi
                                                         </option>
-                                                        <option value="Menunggu Verifikasi" {{ $laporan->status == 'Menunggu Verifikasi' ? 'selected' : '' }}>
+                                                        <option value="Menunggu Verifikasi"
+                                                            {{ $laporan->status == 'Menunggu Verifikasi' ? 'selected' : '' }}>
                                                             Menunggu Verifikasi
                                                         </option>
-                                                        <option value="Ditolak" {{ $laporan->status == 'Ditolak' ? 'selected' : '' }}>
+                                                        {{-- <option value="Ditolak"
+                                                            {{ $laporan->status == 'Ditolak' ? 'selected' : '' }}>
                                                             Ditolak
-                                                        </option>
+                                                        </option> --}}
                                                     </select>
                                                 </form>
                                             </td>
@@ -257,14 +264,18 @@
                                                         </svg>
                                                         Detail
                                                     </button>
-
-                                                    <button onclick="showEditModal({{ $laporan->id }}, '{{ $laporan->name }}', '{{ $laporan->status }}')"
+{{-- 
+                                                    <button
+                                                        onclick="showEditModal({{ $laporan->id }}, '{{ $laporan->name }}', '{{ $laporan->status }}')"
                                                         class="inline-flex items-center px-2 py-1 bg-green-100 hover:bg-green-200 text-green-800 text-xs font-medium rounded transition duration-200">
-                                                        <svg class="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                        <svg class="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24"
+                                                            stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                         </svg>
                                                         Edit Status
-                                                    </button>
+                                                    </button> --}}
                                                 </div>
                                             </td>
                                         </tr>
@@ -366,34 +377,40 @@
     </div>
 
     {{-- Modal Edit Status --}}
-    <div id="edit-status-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div id="edit-status-modal"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-lg p-6 max-w-md w-full">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-semibold" id="modal-title">Edit Status Laporan</h3>
                 <button onclick="closeEditModal()" class="text-gray-500 hover:text-gray-700">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
-          <form action="{{ route('adminhima.laporan_kegiatan.update-status', [$hima->id, $laporan->id]) }}" method="POST" class="inline-block">
+            {{-- <form action="{{ route('adminhima.laporan_kegiatan.update-status', [$hima->id, $laporan_kegiatan->id]) }}"
+                method="POST" class="inline-block"> --}}
+<form id="edit-status-form" method="POST" class="inline-block">
 
                 @csrf
                 @method('PATCH')
                 <div class="mb-4">
                     <label class="block mb-2 text-sm font-medium text-gray-700">Status</label>
-                    <select name="status" id="status-select" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <select name="status" id="status-select"
+                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
                         <option value="Terverifikasi">Terverifikasi</option>
                         <option value="Menunggu Verifikasi">Menunggu Verifikasi</option>
                         <option value="Ditolak">Ditolak</option>
                     </select>
                 </div>
                 <div class="flex justify-end space-x-2">
-                    <button type="button" onclick="closeEditModal()" 
+                    <button type="button" onclick="closeEditModal()"
                         class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition duration-200">
                         Batal
                     </button>
-                    <button type="submit" 
+                    <button type="submit"
                         class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200">
                         Simpan
                     </button>
@@ -417,7 +434,7 @@
 
         function showEditModal(laporanId, laporanName, currentStatus) {
             document.getElementById('modal-title').textContent = `Edit Status: ${laporanName}`;
-            document.getElementById('edit-status-form').action = `/admin/laporan-kegiatan/${laporanId}/update-status`;
+            document.getElementById('edit-status-form').action = `/admin/${{{ $hima->id }}}/laporan_kegiatan/${laporanId}/update-status`;
             document.getElementById('status-select').value = currentStatus;
             document.getElementById('edit-status-modal').classList.remove('hidden');
         }

@@ -33,7 +33,10 @@ class JabatanController extends Controller
         // Validasi input
         $validated = $request->validate([
             'nama' => 'required|string|max:250',
+            'deskripsi' => 'required|string',
+            'tingkatan' => 'required|string|max:100',
         ]);
+
 
         // Tambahkan user_id
         $validated['user_id'] = auth()->id();
@@ -62,16 +65,16 @@ class JabatanController extends Controller
         if ($jabatan->user_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         // Return JSON response untuk AJAX request
         if (request()->ajax()) {
             return response()->json([
                 'id' => $jabatan->id,
-                'nama' => $jabatan->nama
+                'nama' => $jabatan->nama,
+                'tingkatan' => $jabatan->tingkatan,
+                'deskripsi' => $jabatan->deskripsi,
             ]);
         }
-        
-       
     }
 
     /**
@@ -87,7 +90,10 @@ class JabatanController extends Controller
         // Validasi input
         $validated = $request->validate([
             'nama' => 'required|string|max:250',
+            'deskripsi' => 'required|string',
+            'tingkatan' => 'required|string|max:100',
         ]);
+
 
         // Update data
         $jabatan->update($validated);

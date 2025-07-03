@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jabatans', function (Blueprint $table) {
-            $table->id();
-            $table->string("nama");
-            $table->text("deskripsi");
-            $table->string("tingkatan");
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
+        Schema::table('data_penguruses', function (Blueprint $table) {
+            $table->boolean('is_alumni')->default(false);
         });
     }
 
@@ -26,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jabatans');
+        Schema::table('data_penguruses', function (Blueprint $table) {
+            //
+        });
     }
 };

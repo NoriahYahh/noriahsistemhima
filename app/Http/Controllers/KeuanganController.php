@@ -63,7 +63,7 @@ class KeuanganController extends Controller
             'nominal' => 'required|numeric|min:1',
             'tanggal' => 'required|date',
             'action' => 'required|in:masuk,keluar',
-            'keterangan' => 'nullable|string|max:255',
+            'keterangan' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
@@ -133,7 +133,7 @@ class KeuanganController extends Controller
             'nominal' => 'required|numeric|min:1',
             'tanggal' => 'required|date',
             'jenis' => 'required|in:masuk,keluar',
-            'keterangan' => 'nullable|string|max:255',
+            'keterangan' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 

@@ -105,29 +105,67 @@
                         <i class="fas fa-user-plus w-5 h-5 mr-3 text-sm"></i>
                         <span class="text-sm font-medium">Data Calon Pengurus</span>
                     </a>
+
+                    <!-- Pengumuman Menu -->
+                    <a href="{{ route('pengumuman.index') }}"
+                        class="flex items-center px-3 py-2 rounded-lg {{ request()->routeIs('pengumuman.index') ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-100' }} transition-colors">
+                        <i class="fas fa-user-plus w-5 h-5 mr-3 text-sm"></i>
+                        <span class="text-sm font-medium">Pengumuman</span>
+                    </a>
                 @endrole
+
 
                 @role('admin')
-                <!-- SK Menu -->
-                    <a href="{{ route('sk.index') }}"
-                        class="flex items-center px-3 py-2 rounded-lg {{ request()->routeIs('sk.index') ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-100' }} transition-colors">
-                        <i class="fas fa-scroll w-5 h-5 mr-3 text-sm"></i>
-                        <span class="text-sm font-medium">SK</span>
-                    </a>
-                    <!-- All HIMA Menu -->
-                    <a href="{{ route('adminhima.index') }}"
-                        class="flex items-center px-3 py-2 rounded-lg {{ request()->routeIs('adminhima.index') ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-100' }} transition-colors">
-                        <i class="fas fa-university w-5 h-5 mr-3 text-sm"></i>
-                        <span class="text-sm font-medium">All HIMA</span>
-                    </a>
+                    <!-- All HIMA with Inline Dropdown -->
+                    <div x-data="{ open: {{ request()->routeIs('adminhima.index') || request()->routeIs('adminhima.show') || request()->routeIs('sk.index') ? 'true' : 'false' }} }" class="w-full">
+                        <!-- Trigger -->
+                        <button @click="open = !open"
+                            class="flex items-center w-full px-3 py-2 rounded-lg transition-colors
+        {{ request()->routeIs('adminhima.index') || request()->routeIs('adminhima.show') || request()->routeIs('sk.index') ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-100' }}">
+                            <i class="fas fa-university w-5 h-5 mr-3 text-sm"></i>
+                            <span class="text-sm font-medium">All HIMA</span>
+                            <svg class="ml-auto w-4 h-4 transform transition-transform" :class="{ 'rotate-180': open }"
+                                fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
 
-                    <!-- Akun Menu -->
-                    <a href="{{ route('akun.index') }}"
-                        class="flex items-center px-3 py-2 rounded-lg {{ request()->routeIs('akun.index') ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-100' }} transition-colors">
-                        <i class="fas fa-user-cog w-5 h-5 mr-3 text-sm"></i>
-                        <span class="text-sm font-medium">Akun</span>
-                    </a>
+                        <!-- Dropdown Content -->
+                        <div x-show="open" x-transition class="ml-6 mt-2 space-y-1">
+                            @foreach ($himas as $hima)
+                                <a href="{{ route('adminhima.show', $hima) }}"
+                                    class="block px-3 py-2 rounded-lg text-sm transition-colors
+                                   {{ request()->route('hima')?->id == $hima->id
+                                       ? 'bg-purple-100 text-purple-700'
+                                       : 'text-gray-600 hover:bg-gray-100' }}">
+                                    {{ $hima->nama }}
+                                </a>
+                            @endforeach
+
+                            <a href="{{ route('sk.index') }}"
+                                class="block px-3 py-2 rounded-lg text-sm transition-colors
+            {{ request()->routeIs('sk.index') ? 'bg-purple-100 text-purple-700' : 'text-gray-600 hover:bg-gray-100' }}">
+                                • SK HIMA
+                            </a>
+                        </div>
+                    </div>
+
+ 
+                    <!-- Geser Akun ke bawah -->
+                    <div class="mt-2">
+                        <a href="{{ route('akun.index') }}"
+                            class="flex items-center px-3 py-2 rounded-lg transition-colors
+            {{ request()->routeIs('akun.index') ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-100' }}">
+                            <i class="fas fa-user-cog w-5 h-5 mr-3 text-sm"></i>
+                            <span class="text-sm font-medium">Akun</span>
+                        </a>
+                    </div>
                 @endrole
+
+
+
             </nav>
 
             <!-- User Profile -->
@@ -142,28 +180,29 @@
                     </div>
                     {{-- <i class="fas fa-chevron-right text-gray-400 text-xs"></i> --}}
                 </div>
-                  <a href="{{ route('profile.edit') }}"
-                        class="flex items-center mt-2 px-3 py-2 rounded-lg {{ request()->routeIs('profile.edit') ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-100' }} transition-colors">
-                        <i class="fas fa-user-cog w-5 h-5 mr-3 text-sm"></i>
-                        <span class="text-sm font-medium">Profile</span>
-                    </a>
-                     <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit"
-                class="w-full text-left px-4 py-2 mt-3 text-sm text-gray-700 hover:bg-gray-100">
-                {{ __('Log Out') }}
-            </button>
-        </form>
+                <a href="{{ route('profile.edit') }}"
+                    class="flex items-center mt-2 px-3 py-2 rounded-lg {{ request()->routeIs('profile.edit') ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-100' }} transition-colors">
+                    <i class="fas fa-user-cog w-5 h-5 mr-3 text-sm"></i>
+                    <span class="text-sm font-medium">Profile</span>
+                </a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit"
+                        class="w-full text-left px-4 py-2 mt-3 text-sm text-gray-700 hover:bg-gray-100">
+                        {{ __('Log Out') }}
+                    </button>
+                </form>
             </div>
 
 
         </div>
 
         <!-- Main Content Area -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 flex flex-col overflow-
+        ">
             <!-- Header -->
-           
-            
+
+
 
             <!-- Main Content -->
             <main class="flex-1 overflow-auto p-6">
@@ -194,6 +233,8 @@
             });
         });
     </script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
 </body>
 
 </html>

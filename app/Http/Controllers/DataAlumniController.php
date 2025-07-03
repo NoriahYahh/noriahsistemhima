@@ -16,32 +16,75 @@ class DataAlumniController extends Controller
     /**
      * Display a listing of the resource.
      */
-    // public function index(Request $request)
-    // {
-    //     $periode = $request->input('periode');
-    //     $query = DataAlumni::query();
-        
-    //     if ($periode) {
-    //         $query->where('periode', $periode);
-    //     }
-        
-    //     $alumnis = $query->get();
-    //     $jabatans = Jabatan::all();
-        
-    //     return view('pengurus.data_alumni.index', compact('alumnis', 'jabatans', 'periode'));
-    // }
+    
 
-    public function index()
-    {
-        // Ambil tanggal 2 tahun lalu dari sekarang
-        $twoYearsAgo = Carbon::now()->subYears(2);
-        $jabatans = Jabatan::all();
-        // Ambil data pengurus yang tanggal periodenya lebih dari 2 tahun yang lalu
-     $dataPengurus = DataPengurus::where('periode', '<=', $twoYearsAgo)
-    ->where('user_id', Auth::id())
-    ->get();
-        return view('pengurus.data_alumni.index', compact('dataPengurus','jabatans'));
+//    public function index()
+// {
+//     $twoYearsAgo = Carbon::now()->subYears(2);
+
+//     // Ambil semua data alumni, baik karena sudah 2 tahun atau manual ditandai alumni
+//     $query = DataPengurus::query();
+
+//     // Jika bukan admin, hanya tampilkan datanya sendiri
+//     // if (!Auth::user()->is_admin) {
+//     //     $query->where('user_id', Auth::id());
+//     // }
+
+//     // Ambil semua yang periodenya lebih dari 2 tahun ATAU yang sudah ditandai alumni
+//     $dataPengurus = $query->where(function ($q) use ($twoYearsAgo) {
+//         $q->where('periode', '<=', $twoYearsAgo)
+//           ->orWhere('is_alumni', true);
+//     })->get();
+
+//     // Tandai otomatis sebagai alumni jika sudah > 2 tahun tapi belum ditandai
+//     foreach ($dataPengurus as $pengurus) {
+//         if (!$pengurus->is_alumni && $pengurus->periode <= $twoYearsAgo) {
+//             $pengurus->update(['is_alumni' => true]);
+//         }
+//     }
+
+//     return view('pengurus.data_alumni.index', compact('dataPengurus'));
+// }
+public function index(Request $request)
+{
+    $twoYearsAgo = Carbon::now()->subYears(2);
+    $search = $request->input('search'); // ambil input pencarian
+
+    $query = DataPengurus::query();
+
+    // Jika bukan admin, hanya tampilkan data miliknya
+    if (!Auth::user()->is_admin) {
+        $query->where('user_id', Auth::id());
     }
+
+    // Filter alumni
+    $query->where(function ($q) use ($twoYearsAgo) {
+        $q->where('periode', '<=', $twoYearsAgo)
+          ->orWhere('is_alumni', true);
+    });
+
+    // Jika ada keyword pencarian
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('nama', 'like', '%' . $search . '%')
+              ->orWhere('nrp', 'like', '%' . $search . '%');
+        });
+    }
+
+    $dataPengurus = $query->get();
+
+    // Tandai otomatis alumni
+    foreach ($dataPengurus as $pengurus) {
+        if (!$pengurus->is_alumni && $pengurus->periode <= $twoYearsAgo) {
+            $pengurus->update(['is_alumni' => true]);
+        }
+    }
+
+    return view('pengurus.data_alumni.index', compact('dataPengurus', 'search'));
+}
+
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -99,7 +142,7 @@ class DataAlumniController extends Controller
             if ($alumni->image) {
                 Storage::disk('public')->delete($alumni->image);
             }
-            
+
             $path = $request->file('image')->store('alumni', 'public');
             $validated['image'] = $path;
         }

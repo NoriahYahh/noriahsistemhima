@@ -12,14 +12,17 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\LaporanKegiatanController;
+use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\ProkerController;
 use App\Http\Controllers\SkController;
 use App\Models\DataPengurus;
 use App\Models\Hima;
 use App\Models\InfoKegiatan;
 use App\Models\Jabatan;
+use App\Models\Pengumuman;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function (Request $request) {
     $himas = Hima::all();
@@ -41,18 +44,44 @@ Route::get('/', function (Request $request) {
 Route::get('/home/{himas}', function (Hima $himas) {
     $himas->load('user');
     $info_kegiatans = InfoKegiatan::where('user_id', $himas->user_id)->get();
-
+    $pengumumans = Pengumuman::where('user_id', $himas->user_id)->get();
 
     // Ambil semua data jabatan
     $jabatans = Jabatan::all();
 
+
     // Ambil data pengurus berdasarkan user_id dari himas
     // Menggunakan user_id karena Jabatan memiliki relasi ke User
-    $pengurus = DataPengurus::whereHas('jabatan', function ($query) use ($himas) {
+    // $pengurus = DataPengurus::whereHas('jabatan', function ($query) use ($himas) {
+    //     $query->where('user_id', $himas->user_id);
+    // })
+    //     ->with(['user', 'jabatan']) // Load relasi user dan jabatan
+    //     ->get();
+    // $periodeSaatIni = now()->format('Y'); // atau sesuai format periode kamu, contoh: '2024-2025'
+
+    // $pengurus = DataPengurus::where('periode', $periodeSaatIni)
+    //     ->whereHas('jabatan', function ($query) use ($himas) {
+    //         $query->where('user_id', $himas->user_id);
+    //     })
+    //     ->with(['user', 'jabatan'])
+    //     ->get()
+    //     ->groupBy(fn($item) => $item->jabatan->tingkatan);
+$year = date('Y'); // contoh: 2025
+
+// Cari periode yang mengandung tahun ini, misalnya "2024-2025"
+$periodeSaatIni = DataPengurus::select('periode')
+    ->where('periode', 'like', "%$year%")
+    ->pluck('periode')
+    ->first(); // Ambil satu periode yang cocok
+$pengurus = DataPengurus::where('periode', $periodeSaatIni)
+    ->where('is_alumni', false)
+    ->whereHas('jabatan', function ($query) use ($himas) {
         $query->where('user_id', $himas->user_id);
     })
-        ->with(['user', 'jabatan']) // Load relasi user dan jabatan
-        ->get();
+    ->with(['user', 'jabatan'])
+    ->get()
+    ->groupBy(fn($item) => $item->jabatan->tingkatan);
+
 
     // Alternatif jika ingin mengambil semua pengurus dari jabatan yang dibuat oleh user himas
     // $pengurus = DataPengurus::with(['user', 'jabatan'])
@@ -61,8 +90,11 @@ Route::get('/home/{himas}', function (Hima $himas) {
     //                        )
     //                        ->get();
 
-    return view('detail', compact('himas', 'info_kegiatans', 'pengurus', 'jabatans'));
+    return view('detail', compact('himas', 'info_kegiatans', 'pengurus', 'jabatans', 'pengumumans'));
 })->name('home.show');
+Route::get('/pengumuman/{pengumuman}/file', function (Pengumuman $pengumuman) {
+    return Storage::response('public/' . $pengumuman->file);
+})->name('pengumuman-hima.show');
 
 
 // Route untuk menampilkan form pendaftaran spesifik hima
@@ -96,6 +128,9 @@ Route::middleware('auth')->group(function () {
         ])->middleware(['auth', 'verified']);
         // Route::resource('sk', SkController::class)->middleware(['auth', 'verified']);
         Route::resource('info_kegiatan', InfoKegiatanController::class)->middleware(['auth', 'verified']);
+        Route::resource('pengumuman', PengumumanController::class)->middleware(['auth', 'verified']);
+        Route::get('pengumuman/{pengumuman}/download', [PengumumanController::class, 'download'])
+            ->name('pengumuman.download');
         Route::resource('keuangan', KeuanganController::class)->middleware(['auth', 'verified']);
         Route::resource('data_alumni', DataAlumniController::class)->middleware(['auth', 'verified']);
         Route::resource('laporan_kegiatan', LaporanKegiatanController::class)->middleware(['auth', 'verified']);

@@ -11,8 +11,8 @@
                 <div class="p-8 text-gray-900">
                     <div class="flex items-center justify-between mb-10">
                         <h1 class="text-2xl font-bold text-gray-800">Edit Data Pengurus</h1>
-                        <a href="{{ route('data_pengurus.index') }}" 
-                           class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md transition duration-200">
+                        <a href="{{ route('data_pengurus.index') }}"
+                            class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md transition duration-200">
                             ← Kembali
                         </a>
                     </div>
@@ -31,11 +31,11 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('data_pengurus.update', $dataPengurus->id) }}" method="POST" enctype="multipart/form-data"
-                        class="space-y-6">
+                    <form action="{{ route('data_pengurus.update', $dataPengurus->id) }}" method="POST"
+                        enctype="multipart/form-data" class="space-y-6">
                         @csrf
                         @method('PUT')
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block mb-2 text-sm font-medium text-gray-700">Nama</label>
@@ -46,7 +46,7 @@
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
-                            
+
                             <div>
                                 <label class="block mb-2 text-sm font-medium text-gray-700">NRP</label>
                                 <input type="text" name="nrp" placeholder="NRP"
@@ -56,7 +56,7 @@
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
-                            
+
                             <div>
                                 <label class="block mb-2 text-sm font-medium text-gray-700">Jabatan</label>
                                 <select name="jabatan_id"
@@ -84,47 +84,55 @@
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
-                            
+                            <div class="flex items-center space-x-2">
+                                <input type="checkbox" name="is_alumni" id="is_alumni"
+                                    class="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                                    {{ old('is_alumni', $dataPengurus->is_alumni) ? 'checked' : '' }}>
+
+                                <label for="is_alumni" class="text-sm text-gray-700">Tandai sebagai Alumni</label>
+                            </div>
+
                             <div class="md:col-span-2">
                                 <label class="block mb-2 text-sm font-medium text-gray-700">Image</label>
-                                
+
                                 <!-- Preview gambar lama jika ada -->
-                                @if($dataPengurus->image)
+                                @if ($dataPengurus->image)
                                     <div class="mb-4">
                                         <p class="text-sm text-gray-600 mb-2">Gambar saat ini:</p>
                                         <div class="relative inline-block">
-                                            <img src="{{ Storage::url($dataPengurus->image) }}" 
-                                                 alt="Current Image" 
-                                                 class="w-32 h-32 object-cover border border-gray-300 rounded-lg shadow-sm">
-                                            <div class="absolute top-0 right-0 bg-gray-800 text-white text-xs px-2 py-1 rounded-bl-lg">
+                                            <img src="{{ Storage::url($dataPengurus->image) }}" alt="Current Image"
+                                                class="w-32 h-32 object-cover border border-gray-300 rounded-lg shadow-sm">
+                                            <div
+                                                class="absolute top-0 right-0 bg-gray-800 text-white text-xs px-2 py-1 rounded-bl-lg">
                                                 Current
                                             </div>
                                         </div>
                                     </div>
                                 @endif
-                                
+
                                 <input type="file" name="image" id="image"
                                     class="shadow-sm block w-full text-sm text-gray-700 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 @error('image') border-red-500 @enderror"
                                     accept="image/*">
                                 <p class="text-xs text-gray-500 mt-1">
-                                    Biarkan kosong jika tidak ingin mengubah gambar. Format yang diizinkan: JPEG, PNG, JPG, GIF (Max: 2MB)
+                                    Biarkan kosong jika tidak ingin mengubah gambar. Format yang diizinkan: JPEG, PNG,
+                                    JPG, GIF (Max: 2MB)
                                 </p>
                                 @error('image')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
-                                
+
                                 <!-- Preview gambar baru -->
                                 <div id="imagePreview" class="mt-4 hidden">
                                     <p class="text-sm text-gray-600 mb-2">Preview gambar baru:</p>
-                                    <img id="previewImg" src="" alt="Preview" 
-                                         class="w-32 h-32 object-cover border border-gray-300 rounded-lg shadow-sm">
+                                    <img id="previewImg" src="" alt="Preview"
+                                        class="w-32 h-32 object-cover border border-gray-300 rounded-lg shadow-sm">
                                 </div>
                             </div>
                         </div>
 
                         <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
-                            <a href="{{ route('data_pengurus.index') }}" 
-                               class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-md transition duration-200">
+                            <a href="{{ route('data_pengurus.index') }}"
+                                class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-md transition duration-200">
                                 Batal
                             </a>
                             <button type="submit"

@@ -1,12 +1,11 @@
-<x-guest-layout>    <!-- Hero Section -->
+<x-guest-layout> <!-- Hero Section -->
     <div class="max-w-7xl mx-auto px-4">
         <div class="bg-white py-16 text-center mb-10 rounded-2xl mt-8 shadow-lg">
-            <h1 class="text-4xl font-bold text-gray-900 mb-8">{{$himas->nama}}</h1>
+            <h1 class="text-4xl font-bold text-gray-900 mb-8">{{ $himas->nama }}</h1>
             <div class="w-48 h-48 bg-gray-300 rounded-2xl mx-auto flex items-center justify-center overflow-hidden">
-                @if($himas->image)
-                    <img src="{{ asset('storage/' . $himas->image) }}" 
-                         alt="{{ $himas->nama }}" 
-                         class="w-full h-full object-cover rounded-2xl">
+                @if ($himas->image)
+                    <img src="{{ asset('storage/' . $himas->image) }}" alt="{{ $himas->nama }}"
+                        class="w-full h-full object-cover rounded-2xl">
                 @else
                     <span class="text-2xl font-bold text-gray-600">LOGO</span>
                 @endif
@@ -20,11 +19,11 @@
             <div class="grid md:grid-cols-2 gap-12">
                 <div>
                     <h3 class="text-2xl font-bold text-primary mb-6">VISI</h3>
-                    <p class="text-gray-700 text-justify">{{$himas->visi}}</p>
+                    <p class="text-gray-700 text-justify">{{ $himas->visi }}</p>
                 </div>
                 <div>
                     <h3 class="text-2xl font-bold text-primary mb-6">MISI</h3>
-                    <p class="text-gray-700 text-justify">{{$himas->misi}}</p>
+                    <p class="text-gray-700 text-justify">{{ $himas->misi }}</p>
                 </div>
             </div>
         </div>
@@ -35,84 +34,134 @@
         <h2 class="text-4xl font-bold text-gray-900 text-center mb-12">KEGIATAN HIMA</h2>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach ($info_kegiatans as $kegiatan)
-            <div class="cursor-pointer" onclick="showActivityDetail('{{$kegiatan->id}}', '{{$kegiatan->nama}}', '{{$kegiatan->tanggal}}', '{{$kegiatan->keterangan}}', '{{ asset('storage/' . $kegiatan->image) }}')">
-                <div class="activity-card h-48 bg-gray-300 rounded-2xl flex items-center justify-center mb-4 overflow-hidden">
-                    @if($kegiatan->image)
-                        <img src="{{ asset('storage/' . $kegiatan->image) }}" 
-                             alt="{{ $kegiatan->nama }}"
-                             class="w-full h-full object-cover rounded-2xl">
-                    @else
-                        <i class="fas fa-calendar text-6xl text-gray-600"></i>
-                    @endif
+                <div class="cursor-pointer"
+                    onclick="showActivityDetail('{{ $kegiatan->id }}', '{{ $kegiatan->nama }}', '{{ $kegiatan->tanggal }}', '{{ $kegiatan->keterangan }}', '{{ asset('storage/' . $kegiatan->image) }}')">
+                    <div
+                        class="activity-card h-48 bg-gray-300 rounded-2xl flex items-center justify-center mb-4 overflow-hidden">
+                        @if ($kegiatan->image)
+                            <img src="{{ asset('storage/' . $kegiatan->image) }}" alt="{{ $kegiatan->nama }}"
+                                class="w-full h-full object-cover rounded-2xl">
+                        @else
+                            <i class="fas fa-calendar text-6xl text-gray-600"></i>
+                        @endif
+                    </div>
+                    <div class="text-center font-semibold text-gray-800">{{ $kegiatan->nama }}</div>
                 </div>
-                <div class="text-center font-semibold text-gray-800">{{$kegiatan->nama}}</div>
-            </div>
             @endforeach
         </div>
     </div>
 
     <!-- Structure Organization Section -->
-    <div class="max-w-7xl mx-auto px-4 mb-16">
+    <div x-data="{ open: false, selected: {} }" class="max-w-7xl mx-auto px-4 mb-16">
         <h2 class="text-4xl font-bold text-gray-900 text-center mb-12">STRUKTUR ORGANISASI</h2>
-        
-        <div class="flex justify-center mb-12">
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-4xl">
-                @php
-                    $jabatan_priority = [
-                        'ketua' => 1,
-                        'wakil' => 2,
-                        'bendahara' => 3,
-                        'sekretaris' => 4,
-                        'sekertaris' => 4,
-                    ];
-                    
-                    $filtered_pengurus = $pengurus->filter(function($person) {
-                        $jabatan_lower = strtolower($person->jabatan->nama);
-                        return str_contains($jabatan_lower, 'ketua') || 
-                               str_contains($jabatan_lower, 'wakil') || 
-                               str_contains($jabatan_lower, 'sekretaris') || 
-                               str_contains($jabatan_lower, 'sekertaris') || 
-                               str_contains($jabatan_lower, 'bendahara');
-                    })->sortBy(function($person) use ($jabatan_priority) {
-                        $jabatan_lower = strtolower($person->jabatan->nama);
-                        
-                        foreach ($jabatan_priority as $keyword => $priority) {
-                            if (str_contains($jabatan_lower, $keyword)) {
-                                return $priority;
-                            }
-                        }
-                        
-                        return 99;
-                    });
-                @endphp
-                
-                @foreach ($filtered_pengurus as $person)
-                <div class="structure-card bg-gray-300 h-36 rounded-2xl flex flex-col items-center justify-center p-4 text-center cursor-pointer hover:bg-primary hover:text-white transition-all"
-                     onclick="showStructureDetail('{{$person->id}}', '{{ $person->user ? $person->user->name : $person->nama }}', '{{$person->jabatan->nama}}', '{{$person->nrp}}', '{{$person->periode}}', '{{ $person->user ? $person->user->email : '' }}', '{{$person->image}}')">
-                    <div class="text-sm font-medium mb-1">{{$person->jabatan->nama}}</div>
-                    <div class="text-sm">{{ $person->user ? $person->user->name : $person->nama }}</div>
+
+        @forelse ($pengurus as $tingkatan => $pengurusList)
+            <div class="mb-10">
+                <div class="flex flex-wrap justify-center gap-6">
+                    @foreach ($pengurusList as $pengurus)
+                        <div class="bg-white shadow-md rounded-lg p-4 w-60 text-center cursor-pointer hover:shadow-lg transition"
+                            @click="open = true; selected = {{ json_encode([
+                                'nama' => $pengurus->nama,
+                                'nrp' => $pengurus->nrp,
+                                'jabatan' => $pengurus->jabatan->nama,
+                                'deskripsi' => $pengurus->jabatan->deskripsi,
+                                'periode' => $pengurus->periode,
+                                'image' => $pengurus->image ? asset('storage/' . $pengurus->image) : null,
+                            ]) }}">
+                            @if ($pengurus->image)
+                                <img :src="'{{ asset('storage/') }}/' + '{{ $pengurus->image }}'"
+                                    class="w-24 h-24 mx-auto object-cover mb-3 rounded-full" alt="Foto">
+                            @else
+                                <div
+                                    class="w-24 h-24 mx-auto bg-gray-200 flex items-center justify-center text-gray-500 mb-3 rounded-full">
+                                    <i class="fas fa-user text-2xl"></i>
+                                </div>
+                            @endif
+                            <h4 class="text-md font-bold">{{ $pengurus->nama }}</h4>
+                            <p class="text-sm text-gray-600">{{ $pengurus->jabatan->nama }}</p>
+                            <p class="text-xs text-gray-500">NRP: {{ $pengurus->nrp }}</p>
+                        </div>
+                    @endforeach
                 </div>
-                @endforeach
             </div>
-        </div>
-        
-        <div class="flex justify-center">
-            <div class="bg-white rounded-2xl p-8 shadow-lg text-center max-w-2xl">
-                <div id="structure-description">
-                    <p class="text-gray-600">Pilih salah satu pengurus untuk melihat detail informasi</p>
+        @empty
+            <p class="text-center text-gray-500">Belum ada data pengurus untuk periode saat ini.</p>
+        @endforelse
+
+        <!-- Modal -->
+        <div x-show="open" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+            x-transition>
+            <div class="bg-white w-11/12 max-w-md mx-auto rounded-lg shadow-lg p-6 relative" @click.away="open = false">
+                <button @click="open = false" class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">
+                    &times;
+                </button>
+
+                <div class="text-center">
+                    <template x-if="selected.image">
+                        <img :src="selected.image" class="w-24 h-24 mx-auto mb-4 rounded-full object-cover"
+                            alt="Foto">
+                    </template>
+                    <template x-if="!selected.image">
+                        <div
+                            class="w-24 h-24 mx-auto bg-gray-200 flex items-center justify-center text-gray-500 mb-4 rounded-full">
+                            <i class="fas fa-user text-2xl"></i>
+                        </div>
+                    </template>
+
+                    <h3 class="text-xl font-semibold text-gray-800" x-text="selected.nama"></h3>
+                    <p class="text-sm text-gray-600 mt-1" x-text="selected.jabatan"></p>
+                    <p class="text-xs text-gray-500 mt-1">NRP: <span x-text="selected.nrp"></span></p>
+                    <p class="text-xs text-gray-500 mt-1">Periode: <span x-text="selected.periode"></span></p>
+                    <p class="text-xs text-gray-500 mt-1">Deskripsi: <span x-text="selected.deskripsi"></span></p>
+
                 </div>
             </div>
         </div>
     </div>
 
+
     <!-- Announcement Section -->
     <div class="max-w-7xl mx-auto px-4 mb-16">
         <h2 class="text-4xl font-bold text-gray-900 text-center mb-12">PENGUMUMAN</h2>
-        <div class="flex justify-center gap-6 mb-12 flex-wrap">
-            <a href="/daftar" class="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-dark transition-all">Pendaftaran</a>
-            <button class="btn-announcement bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-primary hover:text-white transition-all" onclick="showAnnouncement('tes')">Tes Tertulis</button>
-            <button class="btn-announcement bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-primary hover:text-white transition-all" onclick="showAnnouncement('wawancara')">Wawancara</button>
+        <div class="max-w-7xl mx-auto px-4 mb-16">
+
+            <div class="flex justify-center gap-6 mb-12 flex-wrap">
+                @forelse ($pengumumans as $pengumuman)
+                    <div class="bg-white shadow-md rounded-lg p-6 w-full md:w-1/3 lg:w-1/4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ $pengumuman->judul }}</h3>
+                        <p class="text-sm text-gray-600 mb-4">Diunggah oleh: {{ $pengumuman->user->name }}</p>
+
+                        @if ($pengumuman->file)
+                            <a href="{{ asset('storage/' . $pengumuman->file) }}" target="_blank"
+                                class="inline-block bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 text-sm">
+                                <i class="fas fa-file-download mr-2"></i> File
+                            </a>
+                            {{-- <a href="{{ asset('storage/' . $pengumuman->file) }}" target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-block bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 text-sm">
+                                <i class="fas fa-file-download mr-2"></i> Lihat File
+                            </a> --}}
+                            {{-- <a href="{{ route('pengumuman-hima.show', $pengumuman) }}" target="_blank"
+                                class="inline-flex items-center px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-xs font-medium rounded-md transition duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                Lihat
+                            </a> --}}
+                        @else
+                            <p class="text-xs text-red-500">File tidak tersedia</p>
+                        @endif
+                    </div>
+                @empty
+                    <p class="text-gray-500 text-center w-full">Belum ada pengumuman.</p>
+                @endforelse
+            </div>
         </div>
+
     </div>
 
     <!-- Registration Flow Section -->
@@ -141,51 +190,14 @@
                     <p class="text-gray-600">Sesi wawancara dengan pengurus</p>
                 </div>
             </div>
-            <a href="{{route('daftar.create',$himas->id)}}" 
-               class="bg-gray-200 text-gray-800 px-10 py-4 rounded-xl font-bold text-lg hover:bg-primary hover:text-white transition-all inline-block">
+            <a href="{{ route('daftar.create', $himas->id) }}"
+                class="bg-gray-200 text-gray-800 px-10 py-4 rounded-xl font-bold text-lg hover:bg-primary hover:text-white transition-all inline-block">
                 Pendaftaran
             </a>
         </div>
     </div>
 
     <!-- Activity Detail Modal -->
-    <div id="activityModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="modal-content bg-white rounded-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div class="flex items-center justify-between p-6 border-b border-gray-200">
-                <h2 id="modalTitle" class="text-2xl font-bold text-gray-900">Detail Kegiatan</h2>
-                <button id="closeModal" class="text-gray-400 hover:text-gray-600 transition-colors">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-
-            <div class="p-6">
-                <div class="mb-6">
-                    <img id="modalImage" src="" alt="Activity Image" class="w-full h-64 object-cover rounded-lg">
-                </div>
-
-                <div class="space-y-4">
-                    <div class="flex items-center space-x-3">
-                        <i class="fas fa-calendar-alt text-primary"></i>
-                        <div>
-                            <p class="text-sm text-gray-500">Tanggal</p>
-                            <p id="modalDate" class="font-medium">-</p>
-                        </div>
-                    </div>
-
-                    <div class="mt-6">
-                        <h3 class="text-lg font-bold mb-2">Deskripsi Kegiatan</h3>
-                        <p id="modalDescription" class="text-gray-600 leading-relaxed">-</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex items-center justify-end space-x-4 p-6 border-t border-gray-200">
-                <button id="closeModalFooter" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                    Tutup
-                </button>
-            </div>
-        </div>
-    </div>
 
     <script>
         // Mobile menu toggle
@@ -193,84 +205,5 @@
             const mobileMenu = document.getElementById('mobile-menu');
             mobileMenu.classList.toggle('hidden');
         });
-
-        // Data pengumuman
-        const announcementData = {
-            tes: "Tes tertulis akan dilaksanakan pada tanggal 3-5. Materi meliputi pengetahuan umum, logika, dan sesuai bidang minat masing-masing.",
-            wawancara: "Sesi wawancara akan dilakukan pada tanggal 9-10. Persiapkan diri dengan baik dan tunjukkan motivasi serta visi Anda untuk bergabung."
-        };
-
-        // Modal elements
-        const modal = document.getElementById('activityModal');
-        const closeModal = document.getElementById('closeModal');
-        const closeModalFooter = document.getElementById('closeModalFooter');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalImage = document.getElementById('modalImage');
-        const modalDate = document.getElementById('modalDate');
-        const modalDescription = document.getElementById('modalDescription');
-
-        // Show activity detail
-        function showActivityDetail(id, nama, tanggal, keterangan, image) {
-            modalTitle.textContent = nama;
-            modalImage.src = image;
-            modalImage.alt = nama;
-            modalDate.textContent = tanggal;
-            modalDescription.textContent = keterangan;
-
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Close modal function
-        function closeModalFunction() {
-            modal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Close modal event listeners
-        closeModal.addEventListener('click', closeModalFunction);
-        closeModalFooter.addEventListener('click', closeModalFunction);
-
-        // Close modal when clicking outside
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                closeModalFunction();
-            }
-        });
-
-        // Close modal with ESC key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-                closeModalFunction();
-            }
-        });
-
-        // Show structure detail
-        function showStructureDetail(id, nama, jabatan, nrp, periode, email, image) {
-            const descriptionElement = document.getElementById('structure-description');
-            descriptionElement.innerHTML = `
-                <h5 class="text-xl font-bold mb-2">${nama}</h5>
-                <h6 class="text-primary font-semibold mb-4">${jabatan}</h6>
-                <div class="text-left space-y-2">
-                    <p><strong>NRP:</strong> ${nrp}</p>
-                    <p><strong>Periode:</strong> ${periode}</p>
-                    ${email ? `<p><strong>Email:</strong> ${email}</p>` : ''}
-                </div>
-                ${image ? `<div class="mt-4"><img src="/storage/${image}" alt="${nama}" class="w-24 h-24 object-cover rounded-full mx-auto"></div>` : ''}
-            `;
-        }
-
-        // Show announcement
-        function showAnnouncement(type) {
-            document.querySelectorAll('.btn-announcement').forEach(btn => {
-                btn.classList.remove('bg-primary', 'text-white');
-                btn.classList.add('bg-gray-200', 'text-gray-800');
-            });
-            event.target.classList.remove('bg-gray-200', 'text-gray-800');
-            event.target.classList.add('bg-primary', 'text-white');
-
-            alert(`Pengumuman ${type}: ${announcementData[type]}`);
-        }
     </script>
 </x-guest-layout>
-

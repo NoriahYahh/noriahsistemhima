@@ -67,6 +67,13 @@
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
+                            <div class="flex items-center space-x-2">
+                                <input type="checkbox" name="is_alumni" id="is_alumni"
+                                    class="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                                    {{ old('is_alumni') ? 'checked' : '' }}>
+                                <label for="is_alumni" class="text-sm text-gray-700">Tandai sebagai Alumni</label>
+                            </div>
+
                             <div class="md:col-span-2">
                                 <label class="block mb-2 text-sm font-medium text-gray-700">Image</label>
                                 <input type="file" name="image"
@@ -85,11 +92,11 @@
                         </div>
                     </form>
 
-                  
+
                 </div>
             </div>
         </div>
     </div>
 
-   
+
 </x-app-layout>
