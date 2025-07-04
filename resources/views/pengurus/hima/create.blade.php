@@ -71,9 +71,19 @@
                                 <div class="form-group">
                                     <label for="alur" class="block text-sm font-medium text-gray-700 mb-1">Alur
                                         Pendaftaran <span class="text-red-500">*</span></label>
-                                    <textarea name="alur" id="alur" rows="3" required
+                                    <textarea name="alur" id="alur" rows="3"
                                         class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         placeholder="Masukkan Alur Pendaftaran">{{ old('alur') }}</textarea>
+                                </div>
+                             
+
+                                <div class="form-group">
+                                    <label for="pendaftaran_dibuka" class="inline-flex items-center">
+                                        <input type="checkbox" name="pendaftaran_dibuka" id="pendaftaran_dibuka"
+                                            value="1" {{ old('pendaftaran_dibuka') ? 'checked' : '' }}
+                                            class="rounded text-blue-600 border-gray-300 focus:ring-blue-500">
+                                        <span class="ml-2 text-sm text-gray-700">Buka Pendaftaran</span>
+                                    </label>
                                 </div>
 
                                 <button type="submit"
@@ -135,5 +145,10 @@
                 document.getElementById('logo-placeholder').classList.remove('hidden');
             }
         });
+
+
+
+        
+
     </script>
 </x-app-layout>

@@ -15,11 +15,15 @@ use App\Http\Controllers\LaporanKegiatanController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\ProkerController;
 use App\Http\Controllers\SkController;
+use App\Models\DaftarHima;
 use App\Models\DataPengurus;
 use App\Models\Hima;
 use App\Models\InfoKegiatan;
 use App\Models\Jabatan;
+use App\Models\LaporanKegiatan;
 use App\Models\Pengumuman;
+use App\Models\Sk;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -66,21 +70,30 @@ Route::get('/home/{himas}', function (Hima $himas) {
     //     ->with(['user', 'jabatan'])
     //     ->get()
     //     ->groupBy(fn($item) => $item->jabatan->tingkatan);
-$year = date('Y'); // contoh: 2025
+    $year = date('Y'); // contoh: 2025
 
-// Cari periode yang mengandung tahun ini, misalnya "2024-2025"
-$periodeSaatIni = DataPengurus::select('periode')
-    ->where('periode', 'like', "%$year%")
-    ->pluck('periode')
-    ->first(); // Ambil satu periode yang cocok
-$pengurus = DataPengurus::where('periode', $periodeSaatIni)
-    ->where('is_alumni', false)
-    ->whereHas('jabatan', function ($query) use ($himas) {
-        $query->where('user_id', $himas->user_id);
-    })
-    ->with(['user', 'jabatan'])
-    ->get()
-    ->groupBy(fn($item) => $item->jabatan->tingkatan);
+    // Cari periode yang mengandung tahun ini, misalnya "2024-2025"
+    $periodeSaatIni = DataPengurus::select('periode')
+        ->where('periode', 'like', "%$year%")
+        ->pluck('periode')
+        ->first(); // Ambil satu periode yang cocok
+    $pengurus = DataPengurus::where('periode', $periodeSaatIni)
+        ->where('is_alumni', false)
+        ->whereHas('jabatan', function ($query) use ($himas) {
+            $query->where('user_id', $himas->user_id);
+        })
+        ->with(['user', 'jabatan'])
+        ->get()
+        ->groupBy(fn($item) => $item->jabatan->tingkatan);
+
+    $alumni = DataPengurus::where('is_alumni', true)
+        ->whereHas('jabatan', function ($query) use ($himas) {
+            $query->where('user_id', $himas->user_id);
+        })
+        ->with(['user', 'jabatan'])
+        ->orderBy('periode', 'desc') // urut dari periode terbaru
+        ->get()
+        ->groupBy('periode');
 
 
     // Alternatif jika ingin mengambil semua pengurus dari jabatan yang dibuat oleh user himas
@@ -90,8 +103,9 @@ $pengurus = DataPengurus::where('periode', $periodeSaatIni)
     //                        )
     //                        ->get();
 
-    return view('detail', compact('himas', 'info_kegiatans', 'pengurus', 'jabatans', 'pengumumans'));
+    return view('detail', compact('himas', 'info_kegiatans', 'pengurus', 'jabatans', 'pengumumans', 'alumni'));
 })->name('home.show');
+
 Route::get('/pengumuman/{pengumuman}/file', function (Pengumuman $pengumuman) {
     return Storage::response('public/' . $pengumuman->file);
 })->name('pengumuman-hima.show');
@@ -104,10 +118,84 @@ Route::get('/daftar/{hima}', [DaftarHimaController::class, 'create'])->name('daf
 Route::post('/daftar/{hima}', [DaftarHimaController::class, 'store'])->name('daftar.store');
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/dashboard', function () {
+    $user = Auth::user();
+    $data = [];
+
+    // Jika role pengurus
+    if ($user->hasRole('pengurus')) {
+        $hima = Hima::where('user_id', $user->id)->first();
+
+        // Ambil periode aktif
+        $year = date('Y');
+        $periodeSaatIni = DataPengurus::select('periode')
+            ->where('periode', 'like', "%$year%")
+            ->pluck('periode')
+            ->first();
+
+        $data = [
+            'hima' => $hima,
+            'totalKegiatan' => InfoKegiatan::where('user_id', $user->id)->count(),
+            'totalPengumuman' => Pengumuman::where('user_id', $user->id)->count(),
+            'totalPengurusAktif' => DataPengurus::where('periode', $periodeSaatIni)
+                ->where('is_alumni', false)
+                ->whereHas('jabatan', function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })->count(),
+            'totalJabatan' => Jabatan::where('user_id', $user->id)->count(),
+            'kegiatanTerbaru' => InfoKegiatan::where('user_id', $user->id)->orderBy('created_at', 'desc')->limit(5)->get(),
+            'pengumumanTerbaru' => Pengumuman::where('user_id', $user->id)->orderBy('created_at', 'desc')->limit(5)->get(),
+            'pendaftarHima' => DaftarHima::where('user_id', $user->id)->orderBy('created_at', 'desc')->get(),
+        ];
+    }
+
+    // Jika role admin
+    if ($user->hasRole('admin')) {
+        $data['totalSk'] = Sk::count();
+        $data['totalLaporan'] = LaporanKegiatan::count();
+        $data['totalHima'] = Hima::count();
+    }
+
+    return view('dashboard', $data);
+})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+    
+//     $user = auth()->user();
+
+//     // Data umum yang dibutuhkan untuk semua role
+//     $data = [];
+//     // Jika pengurus HIMA, ambil data HIMA tersebut
+//     $hima = Hima::where('user_id', $user->id)->first();
+
+//     // Cari periode saat ini
+//     $year = date('Y');
+//     $periodeSaatIni = DataPengurus::select('periode')
+//         ->where('periode', 'like', "%$year%")
+//         ->pluck('periode')
+//         ->first();
+
+//     $data = [
+//         'hima' => $hima,
+//         'totalKegiatan' => InfoKegiatan::where('user_id', $user->id)->count(),
+//         'totalPengumuman' => Pengumuman::where('user_id', $user->id)->count(),
+//         'totalPengurusAktif' => DataPengurus::where('periode', $periodeSaatIni)
+//             ->where('is_alumni', false)
+//             ->whereHas('jabatan', function ($query) use ($user) {
+//                 $query->where('user_id', $user->id);
+//             })
+//             ->count(),
+//         'totalJabatan' => Jabatan::where('user_id', $user->id)->count(),
+//         'kegiatanTerbaru' => InfoKegiatan::where('user_id', $user->id)->orderBy('created_at', 'desc')->limit(5)->get(),
+//         'pengumumanTerbaru' => Pengumuman::where('user_id', $user->id)->orderBy('created_at', 'desc')->limit(5)->get(),
+//      'pendaftarHima' => DaftarHima::where('user_id', $user->id)->orderBy('created_at', 'desc')->get(),
+ 
+//     ];
+//     return view('dashboard', $data);
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     // SK Routes

@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('image');
             $table->string('nama');
-            $table->string('visi');
-            $table->string('misi');
-            $table->string('alur');
+            $table->text('visi');
+            $table->text('misi');
+            $table->text('alur')->nullable();
+             $table->boolean('pendaftaran_dibuka')->default(false); 
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
             $table->timestamps();

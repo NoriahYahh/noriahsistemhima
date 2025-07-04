@@ -7,27 +7,47 @@
     <title>{{ $title ?? 'HR Management Dashboard' }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-gray-50" x-data="{ sidebarOpen: false }">
     <div class="flex h-screen">
+        <!-- Mobile Overlay -->
+        <div x-show="sidebarOpen" 
+             x-transition:enter="transition-opacity ease-linear duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition-opacity ease-linear duration-300"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             @click="sidebarOpen = false"
+             class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"></div>
+
         <!-- Sidebar -->
-        <div class="w-64 bg-white border-r border-gray-200 flex flex-col">
+        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0"
+             :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen }">
+            
             <!-- Logo Section -->
             <div class="p-6 border-b border-gray-200">
-                <div class="flex items-center">
-                    <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center mr-3">
-                        <span class="text-white font-bold text-sm">SM</span>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center mr-3">
+                            <span class="text-white font-bold text-sm">SM</span>
+                        </div>
+                        <div>
+                            <h1 class="font-semibold text-gray-900">Sistem Manajement</h1>
+                            <p class="text-sm text-gray-500">Himpunan Mahasiswa</p>
+                        </div>
                     </div>
-                    <div>
-                        <h1 class="font-semibold text-gray-900">Sistem Manajement</h1>
-                        <p class="text-sm text-gray-500">Himpunan Mahasiswa</p>
-                    </div>
+                    <!-- Close button for mobile -->
+                    <button @click="sidebarOpen = false" class="lg:hidden p-2 rounded-md text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
             </div>
 
             <!-- Navigation Menu -->
-            <nav class="flex-1 p-6 space-y-2">
+            <nav class="flex-1 p-6 space-y-2 overflow-y-auto">
                 <!-- Dashboard - Always visible -->
                 <a href="{{ route('dashboard') }}"
                     class="flex items-center px-3 py-2 rounded-lg {{ request()->routeIs('dashboard') ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-100' }} transition-colors">
@@ -109,11 +129,10 @@
                     <!-- Pengumuman Menu -->
                     <a href="{{ route('pengumuman.index') }}"
                         class="flex items-center px-3 py-2 rounded-lg {{ request()->routeIs('pengumuman.index') ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-100' }} transition-colors">
-                        <i class="fas fa-user-plus w-5 h-5 mr-3 text-sm"></i>
+                        <i class="fas fa-bullhorn w-5 h-5 mr-3 text-sm"></i>
                         <span class="text-sm font-medium">Pengumuman</span>
                     </a>
                 @endrole
-
 
                 @role('admin')
                     <!-- All HIMA with Inline Dropdown -->
@@ -152,8 +171,7 @@
                         </div>
                     </div>
 
- 
-                    <!-- Geser Akun ke bawah -->
+                    <!-- Akun Menu -->
                     <div class="mt-2">
                         <a href="{{ route('akun.index') }}"
                             class="flex items-center px-3 py-2 rounded-lg transition-colors
@@ -163,9 +181,6 @@
                         </a>
                     </div>
                 @endrole
-
-
-
             </nav>
 
             <!-- User Profile -->
@@ -178,7 +193,6 @@
                         <p class="font-medium text-gray-900 text-sm">{{ Auth::user()->name }}</p>
                         <p class="text-xs text-gray-500">{{ Auth::user()->email }}</p>
                     </div>
-                    {{-- <i class="fas fa-chevron-right text-gray-400 text-xs"></i> --}}
                 </div>
                 <a href="{{ route('profile.edit') }}"
                     class="flex items-center mt-2 px-3 py-2 rounded-lg {{ request()->routeIs('profile.edit') ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-100' }} transition-colors">
@@ -188,21 +202,25 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit"
-                        class="w-full text-left px-4 py-2 mt-3 text-sm text-gray-700 hover:bg-gray-100">
+                        class="w-full text-left px-4 py-2 mt-3 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
                         {{ __('Log Out') }}
                     </button>
                 </form>
             </div>
-
-
         </div>
 
         <!-- Main Content Area -->
-        <div class="flex-1 flex flex-col overflow-
-        ">
-            <!-- Header -->
-
-
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Mobile Header -->
+            <header class="bg-white border-b border-gray-200 px-4 py-3 lg:hidden">
+                <div class="flex items-center justify-between">
+                    <button @click="sidebarOpen = true" class="p-2 rounded-md text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-bars text-lg"></i>
+                    </button>
+                    <h1 class="font-semibold text-gray-900">Dashboard</h1>
+                    <div class="w-8"></div> <!-- Spacer for centering -->
+                </div>
+            </header>
 
             <!-- Main Content -->
             <main class="flex-1 overflow-auto p-6">
@@ -211,29 +229,27 @@
         </div>
     </div>
 
-    {{-- <script>
-        // Simple JavaScript for sidebar interactions
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebarLinks = document.querySelectorAll('nav a');
-            
-            sidebarLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // Remove active class from all links
-                    sidebarLinks.forEach(l => {
-                        l.classList.remove('bg-purple-50', 'text-purple-600');
-                        l.classList.add('text-gray-600');
-                    });
-                    
-                    // Add active class to clicked link
-                    this.classList.remove('text-gray-600');
-                    this.classList.add('bg-purple-50', 'text-purple-600');
-                });
-            });
+    <!-- Quill CSS & JS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+    <script>
+        // Initialize Quill editor
+        const quill = new Quill('#alur-editor', {
+            theme: 'snow'
         });
-    </script> --}}
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+        // Set old value jika ada saat validasi gagal
+        const oldAlur = @json(old('alur'));
+        if (oldAlur) {
+            quill.root.innerHTML = oldAlur;
+        }
+
+        // Sync ke hidden input saat submit form
+        document.querySelector('form').addEventListener('submit', function() {
+            document.querySelector('#alur').value = quill.root.innerHTML;
+        });
+    </script>
 
 </body>
 

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->text('notes')->nullable(); // Admin notes
             
             // Foreign Keys
-            $table->foreignId('hima_id')->constrained('himas')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('jabatan_id')->nullable()->constrained('jabatans')->onDelete('set null');
             
             $table->timestamps();
