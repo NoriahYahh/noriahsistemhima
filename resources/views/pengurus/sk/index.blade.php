@@ -19,30 +19,35 @@
 
 
                     <div class="mb-4 text-right">
-                     <form method="GET" action="{{ route('sk.index') }}" class="mb-4 max-w-2xl flex space-x-2">
-    <!-- Dropdown Pengunggah -->
-    <select name="search" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-        <option value="">-- Pilih Pengunggah --</option>
-        @foreach ($users as $uploader)
-            <option value="{{ $uploader->id }}" {{ request('search') == $uploader->id ? 'selected' : '' }}>
-                {{ $uploader->name }}
-            </option>
-        @endforeach
-    </select>
+                        <form method="GET" action="{{ route('sk.index') }}" class="mb-4 max-w-2xl flex space-x-2">
+                            <!-- Dropdown Pengunggah -->
+                            <select name="search"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">-- Pilih Pengunggah --</option>
+                                @foreach ($users as $uploader)
+                                    <option value="{{ $uploader->id }}"
+                                        {{ request('search') == $uploader->id ? 'selected' : '' }}>
+                                        {{ $uploader->name }}
+                                    </option>
+                                @endforeach
+                            </select>
 
-    <!-- Dropdown Tahun -->
-    <select name="year" class="w-48 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-        <option value="">-- Semua Tahun --</option>
-        @foreach ($years as $year)
-            <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>{{ $year }}</option>
-        @endforeach
-    </select>
+                            <!-- Dropdown Tahun -->
+                            <select name="year"
+                                class="w-48 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">-- Semua Tahun --</option>
+                                @foreach ($years as $year)
+                                    <option value="{{ $year }}"
+                                        {{ request('year') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                                @endforeach
+                            </select>
 
-    <!-- Tombol Cari -->
-    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">
-        Cari
-    </button>
-</form>
+                            <!-- Tombol Cari -->
+                            <button type="submit"
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">
+                                Cari
+                            </button>
+                        </form>
 
                         <a href="{{ route('sk.create') }}"
                             class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md">
@@ -61,7 +66,7 @@
                                     @endrole
                                     <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">
                                         Keterangan</th>
-                                            <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">
+                                    <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">
                                         Tanggal di buat</th>
                                     <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">File
                                     </th>
@@ -126,7 +131,8 @@
                                     </tr>
                                 @empty
                                     <tr class="border-t border-gray-200">
-                                        <td colspan="3" class="px-6 py-4 text-sm text-center text-gray-500">Belum ada
+                                        {{-- bagian untuk jika kosong --}}
+                                        <td colspan="5" class="px-6 py-4 text-sm text-center text-gray-500">Belum ada
                                             data SK</td>
                                     </tr>
                                 @endforelse

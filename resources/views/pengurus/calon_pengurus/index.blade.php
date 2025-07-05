@@ -9,7 +9,7 @@
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg border border-gray-100">
                 <div class="p-8 text-gray-900">
-                    <h1 class="text-2xl font-bold text-center text-gray-800 mb-10">Daftar Calon Pengurus</h1>
+                    <h1 class="text-2xl font-bold text-center text-gray-800 mb-10">Data Calon Pengurus</h1>
 
                     {{-- Pesan Sukses --}}
                     @if (session('success'))
@@ -18,13 +18,13 @@
                         </div>
                     @endif
 
-                    {{-- Tombol Tambah Data --}}
+                    {{-- Tombol Tambah Data
                     <div class="mb-6">
                         <a href="{{ route('calon_pengurus.create') }}"
                             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
                             + Tambah Calon Pengurus
                         </a>
-                    </div>
+                    </div> --}}
 
                     {{-- Tabel Data --}}
                     <div class="overflow-x-auto">
@@ -39,7 +39,7 @@
                                     <th class="px-4 py-2">Pilihan 1</th>
                                     <th class="px-4 py-2">Pilihan 2</th>
                                     <th class="px-4 py-2">File</th>
-                                    <th class="px-4 py-2">Aksi</th>
+                                    {{-- <th class="px-4 py-2">Aksi</th> --}}
                                 </tr>
                             </thead>
                             <tbody class="bg-gray-100">
@@ -60,20 +60,9 @@
                                                 <span class="text-gray-500">-</span>
                                             @endif
                                         </td>
-                                        <td class="px-4 py-2 space-x-2">
-                                            <a href="{{ route('calon_pengurus.edit', $item->id) }}"
-                                                class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded">
-                                                Edit
-                                            </a>
-                                            <form action="{{ route('calon_pengurus.destroy', $item->id) }}"
-                                                method="POST" class="inline-block"
-                                                onsubmit="return confirm('Yakin ingin menghapus data ini?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">
-                                                    Hapus
-                                                </button>
+                                        
+                                           
+                                                
                                             </form>
                                         </td>
                                     </tr>

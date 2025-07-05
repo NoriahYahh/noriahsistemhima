@@ -9,6 +9,7 @@
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg border border-gray-100">
                 <div class="p-8 text-gray-900">
+                    <h1 class="text-2xl font-bold text-center text-gray-800 mb-10">Laporan Kegiatan</h1>
 
                     {{-- Notifikasi sukses --}}
                     @if (session('success'))

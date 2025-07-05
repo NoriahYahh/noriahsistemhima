@@ -157,7 +157,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="px-6 py-4 text-sm text-center text-gray-500">Tidak ada
+                                        <td colspan="7" class="px-6 py-4 text-sm text-center text-gray-500">Tidak ada
                                             data pengurus</td>
                                     </tr>
                                 @endforelse
