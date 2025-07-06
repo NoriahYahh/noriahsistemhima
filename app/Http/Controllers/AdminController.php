@@ -92,6 +92,22 @@ class AdminController extends Controller
     }
 }
 
+  public function dataalumni(Hima $hima)
+    {
+        $jabatans = Jabatan::all();
+        $hima->load('user');
+
+        // Ambil data pengurus berdasarkan HIMA yang dipilih
+         $alumni = DataPengurus::where('is_alumni', true)
+        ->whereHas('jabatan', function ($query) use ($hima) {
+            $query->where('user_id', $hima->user_id);
+        })
+        ->with(['user', 'jabatan'])
+        ->orderBy('periode', 'desc') // urut dari periode terbaru
+        ->get()
+        ->groupBy('periode');
+        return view("admin.data_alumni", compact('alumni', 'jabatans', 'hima'));
+    }
 
     public function index()
     {

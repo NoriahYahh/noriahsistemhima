@@ -54,22 +54,7 @@ Route::get('/home/{himas}', function (Hima $himas) {
     $jabatans = Jabatan::all();
 
 
-    // Ambil data pengurus berdasarkan user_id dari himas
-    // Menggunakan user_id karena Jabatan memiliki relasi ke User
-    // $pengurus = DataPengurus::whereHas('jabatan', function ($query) use ($himas) {
-    //     $query->where('user_id', $himas->user_id);
-    // })
-    //     ->with(['user', 'jabatan']) // Load relasi user dan jabatan
-    //     ->get();
-    // $periodeSaatIni = now()->format('Y'); // atau sesuai format periode kamu, contoh: '2024-2025'
-
-    // $pengurus = DataPengurus::where('periode', $periodeSaatIni)
-    //     ->whereHas('jabatan', function ($query) use ($himas) {
-    //         $query->where('user_id', $himas->user_id);
-    //     })
-    //     ->with(['user', 'jabatan'])
-    //     ->get()
-    //     ->groupBy(fn($item) => $item->jabatan->tingkatan);
+  
     $year = date('Y'); // contoh: 2025
 
     // Cari periode yang mengandung tahun ini, misalnya "2024-2025"
@@ -94,14 +79,6 @@ Route::get('/home/{himas}', function (Hima $himas) {
         ->orderBy('periode', 'desc') // urut dari periode terbaru
         ->get()
         ->groupBy('periode');
-
-
-    // Alternatif jika ingin mengambil semua pengurus dari jabatan yang dibuat oleh user himas
-    // $pengurus = DataPengurus::with(['user', 'jabatan'])
-    //                        ->whereIn('jabatan_id', 
-    //                            Jabatan::where('user_id', $himas->user_id)->pluck('id')
-    //                        )
-    //                        ->get();
 
     return view('detail', compact('himas', 'info_kegiatans', 'pengurus', 'jabatans', 'pengumumans', 'alumni'));
 })->name('home.show');
@@ -155,6 +132,7 @@ Route::get('/dashboard', function () {
 
     // Jika role admin
     if ($user->hasRole('admin')) {
+          $data['himas'] = Hima::all();
         $data['totalSk'] = Sk::count();
         $data['totalLaporan'] = LaporanKegiatan::count();
         $data['totalHima'] = Hima::count();
@@ -223,11 +201,14 @@ Route::middleware('auth')->group(function () {
         Route::resource('data_alumni', DataAlumniController::class)->middleware(['auth', 'verified']);
         Route::resource('laporan_kegiatan', LaporanKegiatanController::class)->middleware(['auth', 'verified']);
         Route::resource('calon_pengurus', CalonPengurusController::class)->middleware(['auth', 'verified']);
+        Route::get('/calon_pengurus/file/{daftar_hima}', [CalonPengurusController::class, 'pendaftar'])->name('calon_pengurus.pendaftar');
+
     });
     Route::middleware('can:admin melihat semua data hima')->group(function () {
         Route::get('/admin', [AdminController::class, 'hima'])->name('adminhima.index');
         Route::get('/admin/{hima}', [AdminController::class, 'showhima'])->name('adminhima.show');
         Route::get('/admin/{hima}/pengurus', [AdminController::class, 'datapengurus'])->name('adminhima.pengurus');
+        Route::get('/admin/{hima}/alumni', [AdminController::class, 'dataalumni'])->name('adminhima.alumni');
         Route::get('/admin/{hima}/proker', [AdminController::class, 'proker'])->name('adminhima.proker');
         Route::get('/admin/{hima}/laporan_kegiatan', [AdminController::class, 'laporan_kegiatan'])->name('adminhima.laporan_kegiatan');
         Route::patch('/admin/{hima}/laporan_kegiatan/{id}/update-status', [AdminController::class, 'updateStatus'])->name('adminhima.laporan_kegiatan.update-status');

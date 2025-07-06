@@ -54,7 +54,7 @@
                                         <td class="px-4 py-2">{{ $item->pilihan2 }}</td>
                                         <td class="px-4 py-2">
                                             @if ($item->file)
-                                                <a href="{{ asset('storage/files/' . $item->file) }}" target="_blank"
+                                                <a href="{{ route('calon_pengurus.pendaftar',$item->id) }}" target="_blank"
                                                     class="text-blue-600 underline">Lihat</a>
                                             @else
                                                 <span class="text-gray-500">-</span>

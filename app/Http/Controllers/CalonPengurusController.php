@@ -26,6 +26,16 @@ class CalonPengurusController extends Controller
         return view('pengurus.calon_pengurus.create');
     }
 
+    public function pendaftar(DaftarHima $daftar_hima)
+    {
+        if (!$daftar_hima->file || !Storage::disk('public')->exists($daftar_hima->file)) {
+            abort(404, 'File tidak ditemukan.');
+        }
+        // dd($daftar_hima->file);
+        // Tampilkan file langsung di browser (biasanya PDF)
+        return Storage::disk('public')->response($daftar_hima->file);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -116,10 +126,3 @@ class CalonPengurusController extends Controller
         return redirect()->route('calon_pengurus.index')->with('success', 'Data berhasil dihapus.');
     }
 }
-
-
-
-
-
-
-

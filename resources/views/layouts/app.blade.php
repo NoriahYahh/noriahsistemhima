@@ -13,20 +13,16 @@
 <body class="bg-gray-50" x-data="{ sidebarOpen: false }">
     <div class="flex h-screen">
         <!-- Mobile Overlay -->
-        <div x-show="sidebarOpen" 
-             x-transition:enter="transition-opacity ease-linear duration-300"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="transition-opacity ease-linear duration-300"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0"
-             @click="sidebarOpen = false"
-             class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"></div>
+        <div x-show="sidebarOpen" x-transition:enter="transition-opacity ease-linear duration-300"
+            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0" @click="sidebarOpen = false"
+            class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"></div>
 
         <!-- Sidebar -->
         <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0"
-             :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen }">
-            
+            :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen }">
+
             <!-- Logo Section -->
             <div class="p-6 border-b border-gray-200">
                 <div class="flex items-center justify-between">
@@ -40,7 +36,8 @@
                         </div>
                     </div>
                     <!-- Close button for mobile -->
-                    <button @click="sidebarOpen = false" class="lg:hidden p-2 rounded-md text-gray-500 hover:text-gray-700">
+                    <button @click="sidebarOpen = false"
+                        class="lg:hidden p-2 rounded-md text-gray-500 hover:text-gray-700">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -212,7 +209,7 @@
         <!-- Main Content Area -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Mobile Header -->
-            <header class="bg-white border-b border-gray-200 px-4 py-3 lg:hidden">
+            {{-- <header class="bg-white border-b border-gray-200 px-4 py-3 lg:hidden">
                 <div class="flex items-center justify-between">
                     <button @click="sidebarOpen = true" class="p-2 rounded-md text-gray-500 hover:text-gray-700">
                         <i class="fas fa-bars text-lg"></i>
@@ -220,8 +217,14 @@
                     <h1 class="font-semibold text-gray-900">Dashboard</h1>
                     <div class="w-8"></div> <!-- Spacer for centering -->
                 </div>
-            </header>
-
+            </header> --}}
+            @isset($header)
+                <header class="bg-white shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endisset
             <!-- Main Content -->
             <main class="flex-1 overflow-auto p-6">
                 {{ $slot }}

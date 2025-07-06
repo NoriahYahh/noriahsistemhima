@@ -32,14 +32,19 @@
         </div>
     </div>
 
-    <!-- Activities Section -->
-    <div class="max-w-7xl mx-auto px-4 mb-8 md:mb-16">
+  <!-- kegiatan Section -->
+    <div x-data="{ openKegiatan: false, kegiatan: {} }" class="max-w-7xl mx-auto px-4 mb-8 md:mb-16">
         <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 text-center mb-8 md:mb-12">KEGIATAN HIMA
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
             @foreach ($info_kegiatans as $kegiatan)
                 <div class="cursor-pointer"
-                    onclick="showActivityDetail('{{ $kegiatan->id }}', '{{ $kegiatan->nama }}', '{{ $kegiatan->tanggal }}', '{{ $kegiatan->keterangan }}', '{{ asset('storage/' . $kegiatan->image) }}')">
+                    @click="openKegiatan = true; kegiatan = {{ json_encode([
+                        'nama' => $kegiatan->nama,
+                        'tanggal' => $kegiatan->tanggal,
+                        'keterangan' => $kegiatan->keterangan,
+                        'image' => $kegiatan->image ? asset('storage/' . $kegiatan->image) : null,
+                    ]) }}">
                     <div
                         class="activity-card h-32 md:h-48 bg-gray-300 rounded-2xl flex items-center justify-center mb-3 md:mb-4 overflow-hidden">
                         @if ($kegiatan->image)
@@ -54,6 +59,95 @@
                 </div>
             @endforeach
         </div>
+        
+        <!-- Modal Detail Kegiatan -->
+        {{-- <div x-show="openKegiatan" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+            x-transition>
+            <div class="bg-white w-full max-w-md mx-auto rounded-lg shadow-lg p-4 md:p-6 relative"
+                @click.away="openKegiatan = false">
+                <button @click="openKegiatan = false"
+                    class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl font-bold z-10">&times;</button>
+
+                <div class="text-center">
+                    <template x-if="kegiatan.image">
+                        <img :src="kegiatan.image" class="w-full h-48 object-cover rounded-lg mb-4" alt="Kegiatan">
+                    </template>
+                    <template x-if="!kegiatan.image">
+                        <div class="w-full h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
+                            <i class="fas fa-calendar text-4xl text-gray-400"></i>
+                        </div>
+                    </template>
+                    
+                    <h3 class="text-lg md:text-xl font-semibold text-gray-800 mb-2" x-text="kegiatan.nama"></h3>
+                    <p class="text-sm text-gray-600 mb-3">
+                        <i class="fas fa-calendar-alt mr-2"></i>
+                        <span x-text="kegiatan.tanggal"></span>
+                    </p>
+                    <div class="text-sm text-gray-700 text-justify whitespace-pre-line leading-relaxed" 
+                         x-text="kegiatan.keterangan"></div>
+                </div>
+            </div>
+        </div> --}}
+        <!-- Modal Detail Kegiatan -->
+<div x-show="openKegiatan"
+    class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+    x-transition>
+    <div class="modal-content bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative"
+        @click.away="openKegiatan = false">
+
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-4 md:p-6 border-b border-gray-200">
+            <h2 class="text-lg md:text-2xl font-bold text-gray-900">Detail Kegiatan</h2>
+            <button @click="openKegiatan = false" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <i class="fas fa-times text-lg md:text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="p-4 md:p-6">
+            <!-- Activity Image -->
+            <div class="mb-4 md:mb-6">
+                <template x-if="kegiatan.image">
+                    <img :src="kegiatan.image" alt="Activity Image"
+                        class="w-full h-32 md:h-50 object-contain rounded-lg">
+                </template>
+                <template x-if="!kegiatan.image">
+                    <div class="w-full h-32 md:h-50 bg-gray-200 flex items-center justify-center rounded-lg">
+                        <i class="fas fa-calendar text-3xl text-gray-400"></i>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Activity Info -->
+            <div class="space-y-3 md:space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                    <div class="flex items-center space-x-2 md:space-x-3">
+                        <i class="fas fa-calendar-alt text-primary text-sm md:text-base"></i>
+                        <div>
+                            <p class="text-xs md:text-sm text-gray-500">Tanggal</p>
+                            <p class="font-medium text-sm md:text-base" x-text="kegiatan.tanggal">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 md:mt-6">
+                    <h3 class="text-base md:text-lg font-bold mb-2">Deskripsi Kegiatan</h3>
+                    <p class="text-sm md:text-base text-gray-600 leading-relaxed whitespace-pre-line"
+                        x-text="kegiatan.keterangan">-</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="flex items-center justify-end space-x-3 md:space-x-4 p-4 md:p-6 border-t border-gray-200">
+            <button @click="openKegiatan = false"
+                class="px-4 py-2 md:px-6 md:py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm md:text-base">
+                Tutup
+            </button>
+        </div>
+    </div>
+</div>
+
     </div>
 
     <!-- Structure Organization Section -->
