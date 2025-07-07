@@ -45,6 +45,43 @@ Route::get('/', function (Request $request) {
 })->name('home');
 
 // Route yang diperbaiki
+// Route::get('/home/{himas}', function (Hima $himas) {
+//     $himas->load('user');
+//     $info_kegiatans = InfoKegiatan::where('user_id', $himas->user_id)->get();
+//     $pengumumans = Pengumuman::where('user_id', $himas->user_id)->get();
+
+//     // Ambil semua data jabatan
+//     $jabatans = Jabatan::all();
+
+
+
+//     $year = date('Y'); // contoh: 2025
+
+//      // Cari periode yang mengandung tahun ini, misalnya "2024-2025"
+//     $periodeSaatIni = DataPengurus::select('periode')
+//         ->where('periode', 'like', "%$year%")
+//         ->pluck('periode')
+//         ->first(); // Ambil satu periode yang cocok
+//     $pengurus = DataPengurus::where('periode', $periodeSaatIni)
+//         ->where('is_alumni', false)
+//         ->whereHas('jabatan', function ($query) use ($himas) {
+//             $query->where('user_id', $himas->user_id);
+//         })
+//         ->with(['user', 'jabatan'])
+//         ->get()
+//         ->groupBy(fn($item) => $item->jabatan->tingkatan);
+
+//     $alumni = DataPengurus::where('is_alumni', true)
+//         ->whereHas('jabatan', function ($query) use ($himas) {
+//             $query->where('user_id', $himas->user_id);
+//         })
+//         ->with(['user', 'jabatan'])
+//         ->orderBy('periode', 'desc') // urut dari periode terbaru
+//         ->get()
+//         ->groupBy('periode');
+
+//     return view('detail', compact('himas', 'info_kegiatans', 'pengurus', 'jabatans', 'pengumumans', 'alumni'));
+// })->name('home.show');
 Route::get('/home/{himas}', function (Hima $himas) {
     $himas->load('user');
     $info_kegiatans = InfoKegiatan::where('user_id', $himas->user_id)->get();
@@ -53,24 +90,41 @@ Route::get('/home/{himas}', function (Hima $himas) {
     // Ambil semua data jabatan
     $jabatans = Jabatan::all();
 
+    $currentYear = date('Y'); // contoh: 2025
+    $limitYear = $currentYear - 2; // 2 tahun ke bawah: 2023
+// Ambil semua pengurus aktif (is_alumni = false)
+$allPengurus = DataPengurus::where('is_alumni', false)
+    ->whereHas('jabatan', function ($query) use ($himas) {
+        $query->where('user_id', $himas->user_id);
+    })
+    ->with(['user', 'jabatan'])
+    ->get();
 
-  
-    $year = date('Y'); // contoh: 2025
+// Filter berdasarkan periode (2 tahun ke bawah)
+$filteredPengurus = $allPengurus->filter(function ($pengurus) use ($limitYear) {
+    $periodeParts = explode('-', $pengurus->periode);
+    $periodeYear = count($periodeParts) === 1
+        ? (int) substr($pengurus->periode, 0, 4)
+        : (int) $periodeParts[0];
 
-    // Cari periode yang mengandung tahun ini, misalnya "2024-2025"
-    $periodeSaatIni = DataPengurus::select('periode')
-        ->where('periode', 'like', "%$year%")
-        ->pluck('periode')
-        ->first(); // Ambil satu periode yang cocok
-    $pengurus = DataPengurus::where('periode', $periodeSaatIni)
-        ->where('is_alumni', false)
-        ->whereHas('jabatan', function ($query) use ($himas) {
-            $query->where('user_id', $himas->user_id);
-        })
-        ->with(['user', 'jabatan'])
-        ->get()
-        ->groupBy(fn($item) => $item->jabatan->tingkatan);
+    return $periodeYear >= $limitYear;
+});
 
+// Group berdasarkan tingkatan jabatan, hanya 1 sampai 3
+$pengurus = $filteredPengurus
+    ->filter(fn($item) =>
+        $item->jabatan &&
+        $item->jabatan->tingkatan &&
+        in_array($item->jabatan->tingkatan, [1, 2, 3, 4, 5])
+    )
+    ->groupBy(fn($item) => $item->jabatan->tingkatan)
+    ->sortKeys(); // Urutkan berdasarkan tingkatan
+
+
+
+
+    // Untuk alumni, ambil semua dengan urutan periode terbaru
+    // Tapi bisa juga dibatasi periode jika diperlukan
     $alumni = DataPengurus::where('is_alumni', true)
         ->whereHas('jabatan', function ($query) use ($himas) {
             $query->where('user_id', $himas->user_id);
@@ -132,7 +186,7 @@ Route::get('/dashboard', function () {
 
     // Jika role admin
     if ($user->hasRole('admin')) {
-          $data['himas'] = Hima::all();
+        $data['himas'] = Hima::all();
         $data['totalSk'] = Sk::count();
         $data['totalLaporan'] = LaporanKegiatan::count();
         $data['totalHima'] = Hima::count();
@@ -141,7 +195,7 @@ Route::get('/dashboard', function () {
     return view('dashboard', $data);
 })->middleware(['auth', 'verified'])->name('dashboard');
 // Route::get('/dashboard', function () {
-    
+
 //     $user = auth()->user();
 
 //     // Data umum yang dibutuhkan untuk semua role
@@ -170,7 +224,7 @@ Route::get('/dashboard', function () {
 //         'kegiatanTerbaru' => InfoKegiatan::where('user_id', $user->id)->orderBy('created_at', 'desc')->limit(5)->get(),
 //         'pengumumanTerbaru' => Pengumuman::where('user_id', $user->id)->orderBy('created_at', 'desc')->limit(5)->get(),
 //      'pendaftarHima' => DaftarHima::where('user_id', $user->id)->orderBy('created_at', 'desc')->get(),
- 
+
 //     ];
 //     return view('dashboard', $data);
 // })->middleware(['auth', 'verified'])->name('dashboard');
@@ -202,7 +256,6 @@ Route::middleware('auth')->group(function () {
         Route::resource('laporan_kegiatan', LaporanKegiatanController::class)->middleware(['auth', 'verified']);
         Route::resource('calon_pengurus', CalonPengurusController::class)->middleware(['auth', 'verified']);
         Route::get('/calon_pengurus/file/{daftar_hima}', [CalonPengurusController::class, 'pendaftar'])->name('calon_pengurus.pendaftar');
-
     });
     Route::middleware('can:admin melihat semua data hima')->group(function () {
         Route::get('/admin', [AdminController::class, 'hima'])->name('adminhima.index');

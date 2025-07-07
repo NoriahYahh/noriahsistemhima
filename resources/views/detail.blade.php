@@ -32,7 +32,7 @@
         </div>
     </div>
 
-  <!-- kegiatan Section -->
+    <!-- kegiatan Section -->
     <div x-data="{ openKegiatan: false, kegiatan: {} }" class="max-w-7xl mx-auto px-4 mb-8 md:mb-16">
         <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 text-center mb-8 md:mb-12">KEGIATAN HIMA
         </h2>
@@ -59,7 +59,7 @@
                 </div>
             @endforeach
         </div>
-        
+
         <!-- Modal Detail Kegiatan -->
         {{-- <div x-show="openKegiatan" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
             x-transition>
@@ -89,138 +89,148 @@
             </div>
         </div> --}}
         <!-- Modal Detail Kegiatan -->
-<div x-show="openKegiatan"
-    class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-    x-transition>
-    <div class="modal-content bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative"
-        @click.away="openKegiatan = false">
+        <div x-show="openKegiatan"
+            class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" x-transition>
+            <div class="modal-content bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative"
+                @click.away="openKegiatan = false">
 
-        <!-- Modal Header -->
-        <div class="flex items-center justify-between p-4 md:p-6 border-b border-gray-200">
-            <h2 class="text-lg md:text-2xl font-bold text-gray-900">Detail Kegiatan</h2>
-            <button @click="openKegiatan = false" class="text-gray-400 hover:text-gray-600 transition-colors">
-                <i class="fas fa-times text-lg md:text-xl"></i>
-            </button>
-        </div>
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between p-4 md:p-6 border-b border-gray-200">
+                    <h2 class="text-lg md:text-2xl font-bold text-gray-900">Detail Kegiatan</h2>
+                    <button @click="openKegiatan = false" class="text-gray-400 hover:text-gray-600 transition-colors">
+                        <i class="fas fa-times text-lg md:text-xl"></i>
+                    </button>
+                </div>
 
-        <!-- Modal Body -->
-        <div class="p-4 md:p-6">
-            <!-- Activity Image -->
-            <div class="mb-4 md:mb-6">
-                <template x-if="kegiatan.image">
-                    <img :src="kegiatan.image" alt="Activity Image"
-                        class="w-full h-32 md:h-50 object-contain rounded-lg">
-                </template>
-                <template x-if="!kegiatan.image">
-                    <div class="w-full h-32 md:h-50 bg-gray-200 flex items-center justify-center rounded-lg">
-                        <i class="fas fa-calendar text-3xl text-gray-400"></i>
+                <!-- Modal Body -->
+                <div class="p-4 md:p-6">
+                    <!-- Activity Image -->
+                    <div class="mb-4 md:mb-6">
+                        <template x-if="kegiatan.image">
+                            <img :src="kegiatan.image" alt="Activity Image"
+                                class="w-full h-32 md:h-50 object-contain rounded-lg">
+                        </template>
+                        <template x-if="!kegiatan.image">
+                            <div class="w-full h-32 md:h-50 bg-gray-200 flex items-center justify-center rounded-lg">
+                                <i class="fas fa-calendar text-3xl text-gray-400"></i>
+                            </div>
+                        </template>
                     </div>
-                </template>
-            </div>
 
-            <!-- Activity Info -->
-            <div class="space-y-3 md:space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                    <div class="flex items-center space-x-2 md:space-x-3">
-                        <i class="fas fa-calendar-alt text-primary text-sm md:text-base"></i>
-                        <div>
-                            <p class="text-xs md:text-sm text-gray-500">Tanggal</p>
-                            <p class="font-medium text-sm md:text-base" x-text="kegiatan.tanggal">-</p>
+                    <!-- Activity Info -->
+                    <div class="space-y-3 md:space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                            <div class="flex items-center space-x-2 md:space-x-3">
+                                <i class="fas fa-calendar-alt text-primary text-sm md:text-base"></i>
+                                <div>
+                                    <p class="text-xs md:text-sm text-gray-500">Tanggal</p>
+                                    <p class="font-medium text-sm md:text-base" x-text="kegiatan.tanggal">-</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 md:mt-6">
+                            <h3 class="text-base md:text-lg font-bold mb-2">Deskripsi Kegiatan</h3>
+                            <p class="text-sm md:text-base text-gray-600 leading-relaxed whitespace-pre-line"
+                                x-text="kegiatan.keterangan">-</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-4 md:mt-6">
-                    <h3 class="text-base md:text-lg font-bold mb-2">Deskripsi Kegiatan</h3>
-                    <p class="text-sm md:text-base text-gray-600 leading-relaxed whitespace-pre-line"
-                        x-text="kegiatan.keterangan">-</p>
+                <!-- Modal Footer -->
+                <div class="flex items-center justify-end space-x-3 md:space-x-4 p-4 md:p-6 border-t border-gray-200">
+                    <button @click="openKegiatan = false"
+                        class="px-4 py-2 md:px-6 md:py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm md:text-base">
+                        Tutup
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Modal Footer -->
-        <div class="flex items-center justify-end space-x-3 md:space-x-4 p-4 md:p-6 border-t border-gray-200">
-            <button @click="openKegiatan = false"
-                class="px-4 py-2 md:px-6 md:py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm md:text-base">
-                Tutup
-            </button>
-        </div>
     </div>
-</div>
+    {{-- pengurus --}}
 
-    </div>
 
-    <!-- Structure Organization Section -->
-    <div x-data="{ open: false, selected: {} }" class="max-w-7xl mx-auto px-4 mb-8 md:mb-16">
-        <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 text-center mb-8 md:mb-12">STRUKTUR
-            ORGANISASI</h2>
+    <!-- resources/views/pengurus/data_pengurus/index.blade.php -->
+    <!-- resources/views/pengurus/data_pengurus/index.blade.php -->
+    <div x-data="{ openPengurus: false, selectedPengurus: {} }" class="max-w-7xl mx-auto px-4 mb-8 md:mb-16">
+        <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 text-center mb-8 md:mb-12">
+            DATA PENGURUS
+        </h2>
 
         @forelse ($pengurus as $tingkatan => $pengurusList)
             <div class="mb-6 md:mb-10">
-                <div class="flex flex-wrap justify-center gap-3 md:gap-6">
-                    @foreach ($pengurusList as $pengurus)
-                        <div class="bg-white shadow-md rounded-lg p-3 md:p-4 w-full sm:w-48 md:w-60 text-center cursor-pointer hover:shadow-lg transition"
-                            @click="open = true; selected = {{ json_encode([
-                                'nama' => $pengurus->nama,
-                                'nrp' => $pengurus->nrp,
-                                'jabatan' => $pengurus->jabatan->nama,
-                                'deskripsi' => $pengurus->jabatan->deskripsi,
-                                'periode' => $pengurus->periode,
-                                'image' => $pengurus->image ? asset('storage/' . $pengurus->image) : null,
-                            ]) }}">
-                            @if ($pengurus->image)
-                                <img :src="'{{ asset('storage/') }}/' + '{{ $pengurus->image }}'"
-                                    class="w-16 h-16 md:w-24 md:h-24 mx-auto object-cover mb-2 md:mb-3 rounded-full"
-                                    alt="Foto">
-                            @else
-                                <div
-                                    class="w-16 h-16 md:w-24 md:h-24 mx-auto bg-gray-200 flex items-center justify-center text-gray-500 mb-2 md:mb-3 rounded-full">
-                                    <i class="fas fa-user text-lg md:text-2xl"></i>
-                                </div>
-                            @endif
-                            <h4 class="text-sm md:text-md font-bold">{{ $pengurus->nama }}</h4>
-                            <p class="text-xs md:text-sm text-gray-600">{{ $pengurus->jabatan->nama }}</p>
-                            <p class="text-xs text-gray-500">NRP: {{ $pengurus->nrp }}</p>
-                        </div>
-                    @endforeach
-                </div>
+                {{-- <div class="flex flex-wrap justify-center gap-3 md:gap-6"> --}}
+                <div class="w-full overflow-x-auto">
+    <div class="flex justify-center space-x-4 w-max mx-auto px-4 pb-4">
+        @foreach ($pengurusList as $pengurus)
+            <div class="bg-white shadow-md rounded-lg p-3 md:p-4 w-48 flex-shrink-0 text-center hover:shadow-lg transition cursor-pointer"
+                @click="openPengurus = true; selectedPengurus = {{ json_encode([
+                    'nama' => $pengurus->nama,
+                    'nrp' => $pengurus->nrp,
+                    'jabatan' => $pengurus->jabatan->nama,
+                    'periode' => $pengurus->periode,
+                    'image' => $pengurus->image ? asset('storage/' . $pengurus->image) : null,
+                ]) }}">
+                @if ($pengurus->image)
+                    <img src="{{ asset('storage/' . $pengurus->image) }}"
+                        class="w-16 h-16 md:w-24 md:h-24 mx-auto object-cover mb-2 md:mb-3 rounded-full" alt="Foto">
+                @else
+                    <div
+                        class="w-16 h-16 md:w-24 md:h-24 mx-auto bg-gray-200 flex items-center justify-center text-gray-500 mb-2 md:mb-3 rounded-full">
+                        <i class="fas fa-user text-lg md:text-2xl"></i>
+                    </div>
+                @endif
+
+                <h4 class="text-sm md:text-md font-bold">{{ $pengurus->nama }}</h4>
+                <p class="text-xs md:text-sm text-gray-600">{{ $pengurus->jabatan->nama }}</p>
+                <p class="text-xs text-gray-500">NRP: {{ $pengurus->nrp }}</p>
+                <p class="text-xs text-gray-500">Periode: {{ $pengurus->periode }}</p>
+            </div>
+        @endforeach
+    </div>
+</div>
+
             </div>
         @empty
-            <p class="text-center text-gray-500 text-sm md:text-base">Belum ada data pengurus untuk periode saat ini.
-            </p>
+            <div class="text-center">
+                <p class="text-gray-500 text-sm md:text-base mb-4">
+                    Belum ada data pengurus untuk periode 2 tahun terakhir.
+                </p>
+            </div>
         @endforelse
 
-        <!-- Modal -->
-        <div x-show="open" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
-            x-transition>
+        <!-- Modal Detail Pengurus -->
+        <div x-show="openPengurus"
+            class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" x-transition>
             <div class="bg-white w-full max-w-sm md:max-w-md mx-auto rounded-lg shadow-lg p-4 md:p-6 relative"
-                @click.away="open = false">
-                <button @click="open = false" class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">
+                @click.away="openPengurus = false">
+                <button @click="openPengurus = false"
+                    class="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl">
                     &times;
                 </button>
 
                 <div class="text-center">
-                    <template x-if="selected.image">
-                        <img :src="selected.image"
-                            class="w-20 h-20 md:w-24 md:h-24 mx-auto mb-3 md:mb-4 rounded-full object-cover"
+                    <template x-if="selectedPengurus.image">
+                        <img :src="selectedPengurus.image" class="w-20 h-20 mx-auto mb-3 rounded-full object-cover"
                             alt="Foto">
                     </template>
-                    <template x-if="!selected.image">
+                    <template x-if="!selectedPengurus.image">
                         <div
-                            class="w-20 h-20 md:w-24 md:h-24 mx-auto bg-gray-200 flex items-center justify-center text-gray-500 mb-3 md:mb-4 rounded-full">
-                            <i class="fas fa-user text-lg md:text-2xl"></i>
+                            class="w-20 h-20 mx-auto bg-gray-200 flex items-center justify-center text-gray-500 mb-3 rounded-full">
+                            <i class="fas fa-user text-xl"></i>
                         </div>
                     </template>
 
-                    <h3 class="text-lg md:text-xl font-semibold text-gray-800" x-text="selected.nama"></h3>
-                    <p class="text-sm text-gray-600 mt-1" x-text="selected.jabatan"></p>
-                    <p class="text-xs text-gray-500 mt-1">NRP: <span x-text="selected.nrp"></span></p>
-                    <p class="text-xs text-gray-500 mt-1">Periode: <span x-text="selected.periode"></span></p>
-                    <p class="text-xs text-gray-500 mt-1">Deskripsi: <span x-text="selected.deskripsi"></span></p>
+                    <h3 class="text-lg font-semibold text-gray-800" x-text="selectedPengurus.nama"></h3>
+                    <p class="text-sm text-gray-600 mt-1" x-text="selectedPengurus.jabatan"></p>
+                    <p class="text-xs text-gray-500 mt-1">NRP: <span x-text="selectedPengurus.nrp"></span></p>
+                    <p class="text-xs text-gray-500 mt-1">Periode: <span x-text="selectedPengurus.periode"></span></p>
                 </div>
             </div>
         </div>
     </div>
+
     {{-- alumni --}}
     <!-- Structure Organization Section -->
     <div x-data="{ open: false, selected: {} }" class="max-w-7xl mx-auto px-4 mb-8 md:mb-16">
