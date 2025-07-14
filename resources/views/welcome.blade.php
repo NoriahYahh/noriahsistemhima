@@ -6,7 +6,7 @@
             <div class="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
                 <div class="space-y-6 md:space-y-8">
                     <h1 class="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 leading-tight">
-                        Advance your engineering skills with us.
+                        Advance your soft skills with us.
                     </h1>
 
                     <p class="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed">
@@ -51,8 +51,8 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-12">
                 <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 md:mb-0">HIMPUNAN MAHASISWA
                 </h2>
-                <a href="#" class="text-primary font-medium hover:underline text-sm md:text-base">Explore courses
-                    →</a>
+                {{-- <a href="#" class="text-primary font-medium hover:underline text-sm md:text-base">Explore courses
+                    →</a> --}}
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
@@ -82,14 +82,14 @@
                                 {{ $hima->user->name ?? 'Teknik' }}</p>
 
                             <div class="flex items-center justify-between text-xs md:text-sm text-gray-500 mb-4">
-                                <div class="flex items-center space-x-1">
+                                {{-- <div class="flex items-center space-x-1">
                                     <i class="fas fa-book"></i>
                                     <span>12 classes</span>
                                 </div>
                                 <div class="flex items-center space-x-1">
                                     <i class="fas fa-user"></i>
                                     <span>100 students</span>
-                                </div>
+                                </div> --}}
                             </div>
                             <a href="{{ route('home.show', $hima->id) }}"
                                 class="block w-full bg-primary text-white py-2 md:py-3 rounded-full font-medium text-sm md:text-base text-center hover:bg-primary-dark transition-colors">

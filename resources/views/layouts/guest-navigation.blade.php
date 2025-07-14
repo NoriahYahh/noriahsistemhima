@@ -1,11 +1,11 @@
 <!-- Tambahkan Alpine.js di <head> atau sebelum </body> -->
 <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
-<!-- Navigation -->
+<!-- Navigation bagian navbar -->
 <nav class="bg-white shadow-lg sticky top-0 z-50" x-data="{ open: false }">
     <div class="max-w-7xl mx-auto px-4">
         <div class="flex justify-between items-center h-20">
-            <!-- Logo -->
+            <!-- Logo SiHIMA -->
             <div class="flex items-center space-x-2">
                 <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                     <i class="fas fa-graduation-cap text-white text-lg"></i>

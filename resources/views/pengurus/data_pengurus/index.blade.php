@@ -112,6 +112,7 @@
 
                                     <th class="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">
                                         Action</th>
+                                        
                                 </tr>
                             </thead>
                             <tbody class="bg-gray-100">

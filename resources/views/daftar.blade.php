@@ -222,7 +222,7 @@
                             </div>
                         </div>
 
-                        <!-- Optional Jabatan Selection -->
+                        {{-- <!-- Optional Jabatan Selection -->
                         @if(isset($jabatans) && $jabatans->count() > 0)
                         <div>
                             <div class="space-y-2">
@@ -250,7 +250,7 @@
                                 @enderror
                             </div>
                         </div>
-                        @endif
+                        @endif --}}
 
                         <!-- File Upload Section -->
                         <div>

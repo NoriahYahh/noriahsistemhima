@@ -30,10 +30,10 @@
                     </div>
 
                     <div class="mb-4 text-right">
-                        <a href="{{ route('data_pengurus.create') }}"
+                        {{-- <a href="{{ route('data_pengurus.create') }}"
                             class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md">
                             Tambah
-                        </a>
+                        </a> --}}
                     </div>
                     @if ($dataPengurus->isEmpty())
                         <div class="alert alert-info">Tidak ada data pengurus dengan periode lebih dari 2 tahun.</div>

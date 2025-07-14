@@ -9,7 +9,7 @@
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg border border-gray-100">
                 <div class="p-8 text-gray-900">
-                    <h1 class="text-2xl font-bold text-center text-gray-800 mb-10">Laporan Kegiatan</h1>
+                    <h1 class="text-2xl font-bold text-center text-gray-800 mb-10">Info Kegiatan</h1>
 
                     {{-- Notifikasi sukses --}}
                     @if (session('success'))
@@ -18,14 +18,6 @@
                         </div>
                     @endif
 
-                    <div class="flex justify-between mb-4">
-                        <div class="w-full mr-2">
-                            <input type="text" placeholder="Cari..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <button class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md">
-                            Cari
-                        </button>
-                    </div>
                     
                     <div class="mb-4">
                         <a href="{{ route('laporan_kegiatan.create') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md">

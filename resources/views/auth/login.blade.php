@@ -1,6 +1,7 @@
 <x-guest-layout>
     <!-- Login Container -->
     <div
+    {{-- bagian ganti warna login --}}
         class="min-h-screen bg-primary-dark from-indigo-500 via-purple-600 to-pink-500 flex justify-center items-center p-4">
         <div class="w-full max-w-md">
             <div class="bg-white rounded-lg shadow-md overflow-hidden">

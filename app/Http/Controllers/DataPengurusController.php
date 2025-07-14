@@ -59,7 +59,7 @@ class DataPengurusController extends Controller
             'nrp' => $request->nrp,
             'jabatan_id' => $request->jabatan_id,
             'periode' => $request->periode,
-            'user_id' => auth()->id(),
+            'user_id' => auth()->id(), 
             'is_alumni' => $request->has('is_alumni'),
         ]);
 
